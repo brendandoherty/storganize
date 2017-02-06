@@ -12,25 +12,41 @@
     </head>
 
     <body>
-    <h1 class="header orange-text">Sign Up</h1>
-      <form class="col s12">
+      <form id="formContainer" class="col s12">
+      <h1 class="header center orange-text">Sign Up</h1>
         <div class="row center">
           <div class="input-field col s6">
             <input placeholder="Name" id="first_name" type="text" class="validate">
-            <label for="first_name">Name</label>
+          </div>
+          <div class="input-field col s6">
+            <input placeholder="Discount Code" id="discount_code" type="text" class="validate">
           </div>
         </div>
         <div class="row center">
-          <div class="input-field col s6">
-            <input placeholder="Discount Code" id="discount_code" type="text" class="validate">
-            <label for="discount_code">Discount Code</label>
-          </div>
-        </div>
+          <button class="btn waves-effect waves-light btn-large" id="submitForm">
+              Submit
+          </button>
       </form>
 
-
-      <!--Import jQuery before materialize.js-->
+<!--Import jQuery before materialize.js-->
       <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.js"></script>
       <script type="text/javascript" src="js/materialize.js"></script>
+
+<!--Pulling in Logic-->
+      <script type="text/javascript" src="js/index.js"></script>
+
+<!--Pulling in Firebase-->
+      <script src="https://www.gstatic.com/firebasejs/3.6.8/firebase.js"></script>
+      <script>
+        // Initialize Firebase
+        var config = {
+          apiKey: "AIzaSyASXFLFLqjLPxCOfHHyjaEjjUf0F1ty_Rg",
+          authDomain: "storganize-51c93.firebaseapp.com",
+          databaseURL: "https://storganize-51c93.firebaseio.com",
+          storageBucket: "storganize-51c93.appspot.com",
+          messagingSenderId: "266233848793"
+        };
+        firebase.initializeApp(config);
+      </script>
     </body>
   </html>
