@@ -12,7 +12,14 @@
     </head>
 
     <body>
-      <form id="formContainer" class="col s12">
+
+    <div id="formContainer">
+      </div>
+
+    <script id="form-template" type="text/x-handlebars-template">
+      
+
+      
       <h1 class="header center orange-text">Sign Up</h1>
         <div class="row center">
           <div class="input-field col s6">
@@ -21,16 +28,19 @@
           <div class="input-field col s6">
             <input placeholder="Discount Code" id="discount_code" type="text" class="validate">
           </div>
-        </div>
-        <div class="row center">
           <button class="btn waves-effect waves-light btn-large" id="submitForm">
               Submit
           </button>
-      </form>
+        </div>
+    
+    </script>
 
 <!--Import jQuery before materialize.js-->
       <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.js"></script>
       <script type="text/javascript" src="js/materialize.js"></script>
+
+<!-- Pulling in Handlebars-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 
 <!--Pulling in Logic-->
       <script type="text/javascript" src="js/index.js"></script>

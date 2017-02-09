@@ -6,27 +6,38 @@ var model = {
 };
 
 // View
+var formTemplate;
 
+function compileTemplate(){
+	var formTemplateSource = $('#form-template').html();
+  	formTemplate = Handlebars.compile(formTemplateSource);
+}
 
-
+function renderForm() {
+	var formHtml = formTemplate(model);
+  	$('#formContainer').html(formHtml);
+}
 
 // Controller
 
+function setup() {
+	compileTemplate();
+	renderForm();
 
 	// Event Listeners
 
-function setup() {
-	document.getElementById('formContainer').addEventListener('click', 'submitForm', handleSubmit)
+	$('#formContainer').on('click', '#submitForm', handleSubmit)
+
 }
 
 
 	// Form Controllers
-
 function handleSubmit() {
-	var name = document.getElementById('first_name').value();
-	firebase.database().ref('model').push({
-		name: model.name
-	})
-}
+  var name = $('input[id="first_name"]').val();
+  $('input[id="first_name"]').val('');
+  firebase.database().ref('model').push({
+    name: name,
+  });
+};
 
 $(document).ready(setup);
