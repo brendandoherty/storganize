@@ -1,9 +1,22 @@
 // Model
-
 var model = {
-	name: undefined,
-	referral_codes: ['testCode1', 'testCode2', 'testCode3']
+	system: {
+		system_codes: ['testCode1', 'testCode2', 'testCode3']
+	},
+	user: {
+		name: undefined,
+		user_discountCodes: []
+	}
 };
+
+var system = {
+	referral_codes: ['testCode1', 'testCode2', 'testCode3']
+}
+
+var user = {
+	name: undefined,
+	discount_codes: []
+}
 
 // View
 var formTemplate;
@@ -27,27 +40,29 @@ function setup() {
 	// Event Listeners
 
 	$('#formContainer').on('click', '#submitForm', handleSubmit)
-	$('#formContainer').on('click', '#submitForm', checkCode)
-
 };
 
 
 	// Form Controllers
 function handleSubmit() {
-  var name = $('input[id="first_name"]').val();
+  var userName = $('input[id="first_name"]').val();
+  var userCode = $('input[id="discount_code"]').val();
   $('input[id="first_name"]').val('');
-  firebase.database().ref('model').push({
-    name: name,
-  });
-};
 
-function checkCode() {
-	var userCode = $('input[id="discount_code"]').val();
-
-	if (model.referral_codes.includes(userCode)) {
-		document.getElementById("code_status").innerHTML = 'Discount code accepted!'
+  // Using ECMA 6 feature, "includes", below. Need to ensure this is supported by all browsers
+	if (model.system.system_codes.includes(userCode)) {
+		document.getElementById("code_status").innerHTML = 'Discount code accepted!';
+		
+		firebase.database().ref('user').push({
+    		name: userName,
+    		user_discountCodes: userCode
+  		})
 	} else {
-		document.getElementById("code_status").innerHTML = 'Sorry! That is not a valid discount code.'
+		document.getElementById("code_status").innerHTML = 'Sorry! That is not a valid discount code.';
+
+		firebase.database().ref('user').push({
+    		name: userName,
+  		})
 	}
 };
 
