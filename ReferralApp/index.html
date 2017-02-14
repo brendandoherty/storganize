@@ -40,6 +40,12 @@
     <script id="ref-template" type="text/x-handlebars-template"> 
       {{#if loggedIn}}
           <h1 class="header center orange-text">Referrer Profile</h1>
+          <div class="row">
+          <h3 class="left green-text">Referral Rewards</h3>
+          </div>
+          <li class="text" id="successfulRefferals">Successful Refferals: 1</li>
+          <li class="text" id="totalRewards">Total Rewards Earned: $10</li>
+          <br>
           <button class="btn waves-effect waves-light btn-large" id="signOut">Sign Out</button>
       {{else}}
           <h1 class="header center orange-text">Referrer Sign Up</h1>

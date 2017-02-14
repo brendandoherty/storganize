@@ -1,7 +1,7 @@
 // Model
 var model = {
 	system: {
-		system_codes: []
+		system_codes: [],
 	},
 	users: {
 		user_name: undefined,
@@ -11,7 +11,9 @@ var model = {
 		loggedIn: false,
 		email: undefined,
 		name: undefined,
-		discount_code: undefined
+		discount_code: undefined,
+		rewards: []
+
 	}
 };
 
@@ -46,6 +48,7 @@ function setup() {
 	// Temporarily removed renderRefForm(); for testing
 	renderUserForm();
 	renderRefForm();
+	pullCodes();
 
 
 	// Event Listeners for REF FORM
@@ -97,14 +100,18 @@ function handleRegister() {
     		name: fullName,
     		discount_code: refCode
   })
+  pullCodes();
 }
+
 
 function handleLogin() {
   var email = $('input[id="email"]').val();
   var password = $('input[id="password"]').val();
 
   firebase.auth().signInWithEmailAndPassword(email, password);
+  pullCodes();
 }
+
 
 
 	// Form Controllers for USER FORM
@@ -113,9 +120,9 @@ function handleSubmit() {
   var userName = $('input[id="first_name"]').val();
   var userCode = $('input[id="discount_code"]').val();
   $('input[id="first_name"]').val('');
-
+  $('input[id="discount_code"]').val();
   // Using ECMA 6 feature, "includes", below. Not compatible with IE 
-	if (model.system.system_codes.includes(userCode) && model.referrers.discount_code.includes(userCode)) {
+	if (model.system.system_codes.includes(userCode)) {
 		document.getElementById("code_status").innerHTML = 'Discount code accepted!';
 		
 		firebase.database().ref('users').push({
@@ -132,21 +139,17 @@ function handleSubmit() {
 	}
 };
 
-// On page load, pull all the latest discount codes down from the database
+// On page load, pull all the latest discount codes down from the database and store the in the system_codes array
 
 function pullCodes() {
+	firebase.database().ref("/referrers/").on("value", function(snapshot) {
+		var parentKey = (snapshot.val());
 
-firebase.database().ref("/referrers/").on("value", function(snapshot) {
-		 
-		 var parentKey = (snapshot.val());
-
-      for (var prop in parentKey) {
-      	model.system.system_codes.push(
-      		parentKey[prop].discount_code
-      )
-      	console.log(model.system.system_codes)
-		}
-	})
+	    for (var prop in parentKey) {
+	      	model.system.system_codes.push(
+	      		parentKey[prop].discount_code)
+			}
+		})
 };
 
 $(document).ready(setup);
