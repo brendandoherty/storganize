@@ -19,9 +19,6 @@
     <div id="refFormContainer">
     </div>
 
-    <div id="profileContainer">
-    </div>
-
 <!-- Template for User Signup Form-->
     <script id="form-template" type="text/x-handlebars-template"> 
       <h1 class="header center orange-text">Sign Up</h1>
@@ -41,14 +38,25 @@
 
 <!-- Template for Referrer Signup Form-->
     <script id="ref-template" type="text/x-handlebars-template"> 
+      {{#if loggedIn}}
+          <h1 class="header center orange-text">Referrer Profile</h1>
+          <button class="btn waves-effect waves-light btn-large" id="signOut">Sign Out</button>
+      {{else}}
           <h1 class="header center orange-text">Referrer Sign Up</h1>
-          <h3 class="header center red-text" id="code_status"></h3>
-              <div class="row center">
+              <div class="row">
+              <div class="input-field col s6">
+                <input placeholder="First Name" id="ref_firstName" type="text" class="validate">
+              </div>
+              <div class="input-field col s6">
+                <input placeholder="Last Name" id="ref_lastName" type="text" class="validate">
+              </div>
+              </div>
+              <div class="row">
               <div class="input-field col s6">
                 <input placeholder="Email Address" id="email" type="email" class="validate">
               </div>
               </div>
-              <div class="row center">
+              <div class="row">
               <div class="input-field col s6">
                 <input placeholder="Password" id="password" type="password" class="validate">
               </div>
@@ -61,16 +69,9 @@
                 <button class="btn waves-effect waves-light btn-large" id="login">
                     Log In
                 </button>
-            </div>      
+            </div> 
+          {{/if}}     
         </script>
-
-
-<!-- Template for Referrer Profile-->
-    <script id="profile-template" type="text/x-handlebars-template">
-      {{#if loggedIn}}
-      <h1 class="header center orange-text">Referrer Profile</h1>
-      {{/if}}
-    </script>
 
 <!--Import jQuery before materialize.js-->
       <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.js"></script>

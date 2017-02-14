@@ -1,7 +1,7 @@
 // Model
 var model = {
 	system: {
-		system_codes: ['testCode1', 'testCode2', 'testCode3']
+		system_codes: []
 	},
 	users: {
 		user_name: undefined,
@@ -9,23 +9,20 @@ var model = {
 	},
 	referrers: {
 		loggedIn: false,
+		email: undefined,
 		name: undefined,
-		discount_codes: []
+		discount_code: undefined
 	}
 };
 
 
 // View
 var formTemplate;
-var profileTemplate;
 var refTemplate;
 
 function compileTemplates(){
 	var formTemplateSource = $('#form-template').html();
   	formTemplate = Handlebars.compile(formTemplateSource);
-
-  	var profileTemplateSource = $('#profile-template').html();
-  	profileTemplate = Handlebars.compile(profileTemplateSource);
 
   	var refTemplateSource = $('#ref-template').html();
   	refTemplate = Handlebars.compile(refTemplateSource);
@@ -37,13 +34,8 @@ function renderUserForm() {
   	$('#formContainer').html(formHtml);
 };
 
-function renderProfile() {
-	var profileHtml = profileTemplate(model)
-	$('#profileContainer').html(profileHtml);
-}
-
 function renderRefForm() {
-	var refHtml = refTemplate(model)
+	var refHtml = refTemplate(model.referrers)
 	$('#refFormContainer').html(refHtml);
 }
 
@@ -51,13 +43,15 @@ function renderRefForm() {
 
 function setup() {
 	compileTemplates();
-	// Temporarily removed renderUserForm(); for testing
+	// Temporarily removed renderRefForm(); for testing
+	renderUserForm();
 	renderRefForm();
-	renderProfile();
+
 
 	// Event Listeners for REF FORM
 	$('#refFormContainer').on('click', '#register', handleRegister);
   	$('#refFormContainer').on('click', '#login', handleLogin);
+  	$('#refFormContainer').on('click', '#signOut', handleSignout);
 	firebase.auth().onAuthStateChanged(handleAuthStateChange);
 
 
@@ -81,14 +75,28 @@ function handleAuthStateChange() {
   }
 
   renderRefForm();
-  renderProfile();
 };
 
+function handleSignout() {
+  firebase.auth().signOut()
+}
+
 function handleRegister() {
+  var firstName = $('input[id="ref_firstName"]').val();
+  var lastName = $('input[id="ref_lastName"]').val();
   var email = $('input[id="email"]').val();
   var password = $('input[id="password"]').val();
 
   firebase.auth().createUserWithEmailAndPassword(email, password);
+
+  var fullName = firstName + ' ' + lastName
+  var refCode = 'stor' + Math.floor((Math.random() * 9999) + 1000)
+
+  firebase.database().ref('referrers').push({
+    		email: email,
+    		name: fullName,
+    		discount_code: refCode
+  })
 }
 
 function handleLogin() {
@@ -96,7 +104,6 @@ function handleLogin() {
   var password = $('input[id="password"]').val();
 
   firebase.auth().signInWithEmailAndPassword(email, password);
-
 }
 
 
@@ -108,7 +115,7 @@ function handleSubmit() {
   $('input[id="first_name"]').val('');
 
   // Using ECMA 6 feature, "includes", below. Not compatible with IE 
-	if (model.system.system_codes.includes(userCode)) {
+	if (model.system.system_codes.includes(userCode) && model.referrers.discount_code.includes(userCode)) {
 		document.getElementById("code_status").innerHTML = 'Discount code accepted!';
 		
 		firebase.database().ref('users').push({
@@ -123,6 +130,23 @@ function handleSubmit() {
     		user_discountCodes: 'no discount codes'
   		})
 	}
+};
+
+// On page load, pull all the latest discount codes down from the database
+
+function pullCodes() {
+
+firebase.database().ref("/referrers/").on("value", function(snapshot) {
+		 
+		 var parentKey = (snapshot.val());
+
+      for (var prop in parentKey) {
+      	model.system.system_codes.push(
+      		parentKey[prop].discount_code
+      )
+      	console.log(model.system.system_codes)
+		}
+	})
 };
 
 $(document).ready(setup);
