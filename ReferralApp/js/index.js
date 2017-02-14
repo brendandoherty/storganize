@@ -10,10 +10,8 @@ var model = {
 	referrers: {
 		loggedIn: false,
 		name: undefined,
-		details: {
-			email: undefined,
-			discount_code: undefined
-		}
+		email: undefined,
+		discount_code: undefined
 	}
 };
 
@@ -69,7 +67,7 @@ function pullCodes() {
 
 	    for (var prop in parentKey) {
 	      	model.system.system_codes.push(
-	      		parentKey[prop].details.discount_code)
+	      		parentKey[prop].discount_code)
 			}
 		})
 };
@@ -77,15 +75,17 @@ function pullCodes() {
 // Check the referrer's details on FB to see if there have been any successful referrals and update profile
 function referralCheck() {
 
-	var ref = firebase.database().ref("/users");
-	ref.orderByChild("user_discountCodes").equalTo("stor6099").on("value", function(snapshot) {
+	var ref = firebase.database().ref("/referrers");
+	ref.orderByChild("discount_code").equalTo("stor4659").on("value", function(snapshot) {
 		var parentKey = (snapshot.val());
 
 		for (var prop in parentKey) {
-			var x = parentKey[prop].user_discountCodes
-			var y = parentKey[prop].user_name
+			var x = parentKey[prop].discount_code
+			var y = parentKey[prop].email
 		}
-		console.log('Found code match for user, ' + y + ' with code, ' + x)
+		if (x) {
+			console.log('Found code match for user, ' + y + ' with code, ' + x)
+	} else (console.log('FAIL'))
 });
 
 
@@ -126,10 +126,8 @@ function handleRegister() {
 
   firebase.database().ref('referrers').push({
     		name: fullName,
-    		details: {
-    			email: email,
-    			discount_code: refCode
-    		}
+    		email: email,
+    		discount_code: refCode
   })
 }
 
