@@ -1,19 +1,19 @@
 // Model
 var model = {
 	system: {
-		system_codes: [],
-	},
+		system_codes: []
+		},
 	users: {
 		user_name: undefined,
 		user_discountCodes: []
 	},
 	referrers: {
 		loggedIn: false,
-		email: undefined,
 		name: undefined,
-		discount_code: undefined,
-		rewards: []
-
+		details: {
+			email: undefined,
+			discount_code: undefined
+		}
 	}
 };
 
@@ -45,11 +45,9 @@ function renderRefForm() {
 
 function setup() {
 	compileTemplates();
-	// Temporarily removed renderRefForm(); for testing
 	renderUserForm();
 	renderRefForm();
 	pullCodes();
-
 
 	// Event Listeners for REF FORM
 	$('#refFormContainer').on('click', '#register', handleRegister);
@@ -60,7 +58,38 @@ function setup() {
 
 	// Event Listeners for USER FORM
 
-	$('#formContainer').on('click', '#submitForm', handleSubmit)
+	$('#formContainer').on('click', '#submitForm', referralCheck)
+};
+
+// On page load, pull all the latest discount codes down from the database and store the in the system_codes array
+
+function pullCodes() {
+	firebase.database().ref("/referrers/").on("value", function(snapshot) {
+		var parentKey = (snapshot.val());
+
+	    for (var prop in parentKey) {
+	      	model.system.system_codes.push(
+	      		parentKey[prop].details.discount_code)
+			}
+		})
+};
+
+// Check the referrer's details on FB to see if there have been any successful referrals and update profile
+function referralCheck() {
+
+	var ref = firebase.database().ref("/users");
+	ref.orderByChild("user_discountCodes").equalTo("stor6099").on("value", function(snapshot) {
+		var parentKey = (snapshot.val());
+
+		for (var prop in parentKey) {
+			var x = parentKey[prop].user_discountCodes
+			var y = parentKey[prop].user_name
+		}
+		console.log('Found code match for user, ' + y + ' with code, ' + x)
+});
+
+
+
 };
 
 
@@ -96,11 +125,12 @@ function handleRegister() {
   var refCode = 'stor' + Math.floor((Math.random() * 9999) + 1000)
 
   firebase.database().ref('referrers').push({
-    		email: email,
     		name: fullName,
-    		discount_code: refCode
+    		details: {
+    			email: email,
+    			discount_code: refCode
+    		}
   })
-  pullCodes();
 }
 
 
@@ -110,6 +140,8 @@ function handleLogin() {
 
   firebase.auth().signInWithEmailAndPassword(email, password);
   pullCodes();
+
+  //input referralCheck(); function to pull referrer name and code down to local object, then check if there have been any successful referrals and update profile
 }
 
 
@@ -120,7 +152,7 @@ function handleSubmit() {
   var userName = $('input[id="first_name"]').val();
   var userCode = $('input[id="discount_code"]').val();
   $('input[id="first_name"]').val('');
-  $('input[id="discount_code"]').val();
+  $('input[id="discount_code"]').val('');
   // Using ECMA 6 feature, "includes", below. Not compatible with IE 
 	if (model.system.system_codes.includes(userCode)) {
 		document.getElementById("code_status").innerHTML = 'Discount code accepted!';
@@ -137,19 +169,6 @@ function handleSubmit() {
     		user_discountCodes: 'no discount codes'
   		})
 	}
-};
-
-// On page load, pull all the latest discount codes down from the database and store the in the system_codes array
-
-function pullCodes() {
-	firebase.database().ref("/referrers/").on("value", function(snapshot) {
-		var parentKey = (snapshot.val());
-
-	    for (var prop in parentKey) {
-	      	model.system.system_codes.push(
-	      		parentKey[prop].discount_code)
-			}
-		})
 };
 
 $(document).ready(setup);
