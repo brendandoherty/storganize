@@ -36,61 +36,56 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 		</div>
 
 <!-- Profile HTML is below-->
-		<div id="profile" style="display:none">
-
 	      <!-- !PAGE CONTENT! -->
-	      <div class="w3-main">
-
+	      <div class="w3-main w3-mobile" id="profile" style="display:none">
 	        <!-- Header -->
 	        <header class="w3-container" style="padding-top:10px padding-bottom:10px">
 	          <p><h1 id= "yourName">JOHN DOE</h1></p>
-	          <span class="w3-right" style="padding-bottom:10px">
-	          	<button class="w3-button w3-large w3-teal" id="logout">Log Out</button>
-	          </span>
 	        </header>
 
+	        <!--DEMO CODE-->
 	        <div class="w3-row-padding w3-margin-bottom">
-	          
-	          <div class="w3-container">
-	            <div class="w3-container w3-blue w3-padding-16">
-	              <div class="w3-left"><i class="fa fa-eye w3-xxxlarge"></i></div>
-	              <div class="w3-right">
-	                <p><h3 id= "yourCode">TESTCODE</h3></p>
-	              </div>
-	              <div class="w3-clear"></div>
-	              <h4>Your Referral Code</h4>
-	            </div>
-	         </div>
+					    <div class="w3-third">
+					      <div class="w3-container w3-red w3-padding-16">
+					        <div class="w3-left"><i class="fa fa-comment w3-xxxlarge"></i></div>
+					        <div class="w3-right">
+					          <h3>TESTCODE</h3>
+					        </div>
+					        <div class="w3-clear"></div>
+					        <h4>Your Referral Code</h4>
+					      </div>
+					    </div>
+					    <div class="w3-third">
+					      <div class="w3-container w3-blue w3-padding-16">
+					        <div class="w3-left"><i class="fa fa-eye w3-xxxlarge"></i></div>
+					        <div class="w3-right">
+					          <h3>2</h3>
+					        </div>
+					        <div class="w3-clear"></div>
+					        <h4>Your Referrals</h4>
+					      </div>
+					    </div>
+					    <div class="w3-third">
+					      <div class="w3-container w3-teal w3-padding-16">
+					        <div class="w3-left"><i class="fa fa-usd w3-xxxlarge"></i></div>
+					        <div class="w3-right">
+					          <h3>$20</h3>
+					        </div>
+					        <div class="w3-clear"></div>
+					        <h4>Total Earnings</h4>
+					      </div>
+					    </div>
+					 </div>
 
-	         <div class="w3-row-padding w3-margin-bottom">
+					<div class="w3-container w3-mobile">						 
+						 <span class="w3-left" style="padding-bottom:10px">
+		          	<button class="w3-button w3-large w3-orange w3-text-white" id="logout">Log Out</button>
+		          </span>
+		      </div>
+			<!-- END MAIN CONTENT -->
+			</div>
+		
 
-	          </div>
-	          <div class="w3-half">
-	            <div class="w3-container w3-teal w3-padding-16">
-	              <div class="w3-left"><i class="fa fa-share-alt w3-xxxlarge"></i></div>
-	              <div class="w3-right">
-	                <h3>2</h3>
-	              </div>
-	              <div class="w3-clear"></div>
-	              <h4>Your Referrals</h4>
-	            </div>
-	          </div>
-	          <div class="w3-half">
-	            <div class="w3-container w3-teal w3-padding-16">
-	              <div class="w3-left"><i class="fa fa-share-alt w3-xxxlarge"></i></div>
-	              <div class="w3-right">
-	                <h3>$20</h3>
-	              </div>
-	              <div class="w3-clear"></div>
-	              <h4>Total Earnings</h4>
-	            </div>
-	          </div>
-
-	        </div>
-
-	        <!-- End page content -->
-	      </div>
-		</div>
 
 
 		<!-- Bringing in Firebase -->
@@ -130,8 +125,8 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
                   refCandyCode: ''
         })
       document.getElementById("yourName").innerHTML = 'Welcome, ' + '' + email;
-	  displayProfile()
-	})
+	  	displayProfile();
+		})
 	};
 
 		function handleLogin() {
@@ -148,8 +143,8 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 		          userEmail = user.email; 
 		        }
         document.getElementById("yourName").innerHTML = 'Welcome, ' + '' + userEmail; 		
-		displayProfile()
-		})
+				displayProfile();
+			})
 		};
 
 		function handleSignout() {
