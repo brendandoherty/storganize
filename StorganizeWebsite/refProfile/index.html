@@ -9,7 +9,7 @@
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 </style>
-	<body class="w3-light-grey"">
+	<body class="w3-light-grey">
 
 <!-- All HTML for signup and profile is below -->
 
@@ -20,7 +20,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 			  <h2>Referrer Sign Up</h2>
 			</div>
 
-			<form class="w3-container">
+			<div class="w3-container">
 
 				<label class="w3-label w3-validate"">Email</label>
 				<input class="w3-input" id='email' type="text" required>
@@ -32,7 +32,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
 				<button class="w3-button w3-large w3-hover-teal" id="login">Login</button>
 
-			</form>
+			</div>
 		</div>
 
 <!-- Profile HTML is below-->
@@ -43,7 +43,10 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
 	        <!-- Header -->
 	        <header class="w3-container" style="padding-top:10px padding-bottom:10px">
-	          <p><h1 id= "yourName">John Doe</h1></p>
+	          <p><h1 id= "yourName">JOHN DOE</h1></p>
+	          <span class="w3-right" style="padding-bottom:10px">
+	          	<button class="w3-button w3-large w3-teal" id="logout">Log Out</button>
+	          </span>
 	        </header>
 
 	        <div class="w3-row-padding w3-margin-bottom">
@@ -52,7 +55,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 	            <div class="w3-container w3-blue w3-padding-16">
 	              <div class="w3-left"><i class="fa fa-eye w3-xxxlarge"></i></div>
 	              <div class="w3-right">
-	                <p><h3 id= "yourCode">stor2099</h3></p>
+	                <p><h3 id= "yourCode">TESTCODE</h3></p>
 	              </div>
 	              <div class="w3-clear"></div>
 	              <h4>Your Referral Code</h4>
@@ -91,30 +94,27 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
 
 		<!-- Bringing in Firebase -->
-		<script src="https://www.gstatic.com/firebasejs/3.6.10/firebase.js"></script>
-		<script>
-		  // Initialize Firebase
-		  var config = {
-		    apiKey: "AIzaSyCWbr-clEQJaLg_CoUcOR7hMRrPrx46qI0",
-		    authDomain: "storganize-referral.firebaseapp.com",
-		    databaseURL: "https://storganize-referral.firebaseio.com",
-		    storageBucket: "storganize-referral.appspot.com",
-		    messagingSenderId: "314957063559"
-		  };
-		  firebase.initializeApp(config);
-		</script>
+		
+			<script src="https://www.gstatic.com/firebasejs/3.6.10/firebase.js"></script>
+			<script>
+			  // Initialize Firebase
+			  var config = {
+			    apiKey: "AIzaSyCWbr-clEQJaLg_CoUcOR7hMRrPrx46qI0",
+			    authDomain: "storganize-referral.firebaseapp.com",
+			    databaseURL: "https://storganize-referral.firebaseio.com",
+			    storageBucket: "storganize-referral.appspot.com",
+			    messagingSenderId: "314957063559"
+			  };
+			  firebase.initializeApp(config);
+			</script>
 
 		<!-- All Javascript logic is contained within the below script tag for easy embed on Squarespace. When we transition to Storganize App, this code should be placed within a standard index.js file-->
 
 		<script type="text/Javascript">	
-		// Model
-		var referrers = {
-			loggedIn: false,
-			name: undefined
-		}
 
 		document.getElementById("register").addEventListener("click", handleRegister);
 		document.getElementById("login").addEventListener("click", handleLogin);
+		document.getElementById("logout").addEventListener("click", handleSignout);
 		
 
 		function handleRegister() {
@@ -122,44 +122,50 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 			var password = document.getElementById("password").value
 
 			firebase.auth().createUserWithEmailAndPassword(email, password).then(function pushData() {
-				  	var user = firebase.auth().currentUser
-				  	var uid = user.uid
-					var refCode = 'stor' + Math.floor((Math.random() * 9999) + 1000)
+            var user = firebase.auth().currentUser
+            var uid = user.uid
 
-					  firebase.database().ref('referrers/' + user.uid).set({
-					    		email: email,
-					    		discount_code: refCode,
-					    		successful_referrals: 0
-				})
-			}) 
-			
-			displayProfile()
-		};
-
+            firebase.database().ref('referrers/' + user.uid).set({
+                  email: email,
+                  refCandyCode: ''
+        })
+      document.getElementById("yourName").innerHTML = 'Welcome, ' + '' + email;
+	  displayProfile()
+	})
+	};
 
 		function handleLogin() {
 			var email = document.getElementById("email").value
-			var password = document.getElementById("password").value		
-			
+			var password = document.getElementById("password").value
+
 			// Log in the user and append his/her email to the top of the profile page
 
-			firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
-				var user = firebase.auth().currentUser;
-			 	var userEmail, uid, discount_code;
+		      firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
+		        var user = firebase.auth().currentUser;
+		        var userEmail;
 
-				if (user != null) {
-				  userEmail = user.email; 
-				}
-				document.getElementById("yourName").innerHTML = 'Welcome, ' + '' + userEmail;
-				displayProfile()
-			});
-		}
+		        if (user != null) {
+		          userEmail = user.email; 
+		        }
+        document.getElementById("yourName").innerHTML = 'Welcome, ' + '' + userEmail; 		
+		displayProfile()
+		})
+		};
+
+		function handleSignout() {
+		  firebase.auth().signOut()
+		  displaySignup()
+		};
 
 		function displayProfile() {
-
 				document.getElementById("signupForm").style.display = 'none';
 				document.getElementById("profile").style.display = 'block';
-		}
+		};
+
+		function displaySignup() {
+				document.getElementById("signupForm").style.display = 'block';
+				document.getElementById("profile").style.display = 'none';
+		};
 		
 		</script>
 
