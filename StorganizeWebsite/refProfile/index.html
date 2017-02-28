@@ -16,24 +16,49 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 <!-- Signup Form HTML is below-->
 		<div class="w3-card-4" id="signupForm" style="display:block">
 
-			<div class="w3-container w3-green">
-			  <h2>Referrer Sign Up</h2>
+			<div class="w3-container w3-teal">
+			  <h2>Storganize Referrer Portal</h2>
 			</div>
 
-			<div class="w3-container">
+			<div class="w3-container w3-padding-16">
 
-				<label class="w3-label w3-validate"">Email</label>
-				<input class="w3-input" id='email' type="text" required>
+				<label class="w3-label">Email</label>
+				<input class="w3-input" id='email' type="text" placeholder="Enter Email" required>
 				
-				<label class="w3-label w3-validate">Password</label>
-				<input class="w3-input" id='password' type="password" required>
+				<label class="w3-label">Password</label>
+				<input class="w3-input" id='password' type="password" placeholder="Enter Password" required>
 
-				<button class="w3-button w3-large w3-hover-teal" id="register">Register</button>
+				<span class="w3-left w3-padding"><a href="#" onclick="document.getElementById('forgotPassword').style.display='block'"">Forgot password?</a></span>
 
-				<button class="w3-button w3-large w3-hover-teal" id="login">Login</button>
+        <div class="w3-container w3-padding-16">
+				<button class="w3-button w3-large w3-teal " id="register">Register</button>
+
+				<button class="w3-button w3-large w3-teal" id="login">Login</button>
+				</div>
 
 			</div>
 		</div>
+
+<!--Forgot Password Modal-->
+		<div id="forgotPassword" class="w3-modal" style="display:none">
+	    <div class="w3-modal-content w3-card-8">
+	      <header class="w3-container w3-teal"> 
+	        <span onclick="document.getElementById('forgotPassword').style.display='none'" 
+	        class="w3-closebtn">&times;</span>
+	        <h2>Forgot Your Password?</h2>
+	      </header>
+	      <div class="w3-container" id="forgotPasswordForm">
+	        <label class="w3-label">Please enter the email address associated with your account</label>
+					<input class="w3-input" id='forgotPasswordEmail' type="text" placeholder="Enter Email" required>
+	      </div>
+	      <div class="w3-container" id="forgotPasswordResult" style="display:none">
+	      	<h3>RESULT OF PASSWORD RESET</h3>
+	      </div>
+	      <div class="w3-container w3-padding">
+	        <button class="w3-button w3-large w3-teal" id="submitPasswordReset">Submit</button>
+	      </div>
+	    </div>
+  	</div>
 
 <!-- Profile HTML is below-->
 	      <!-- !PAGE CONTENT! -->
@@ -49,7 +74,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 					      <div class="w3-container w3-red w3-padding-16">
 					        <div class="w3-left"><i class="fa fa-comment w3-xxxlarge"></i></div>
 					        <div class="w3-right">
-					          <h3>TESTCODE</h3>
+					          <h4>TESTCODE</h4>
 					        </div>
 					        <div class="w3-clear"></div>
 					        <h4>Your Referral Code</h4>
@@ -59,7 +84,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 					      <div class="w3-container w3-blue w3-padding-16">
 					        <div class="w3-left"><i class="fa fa-eye w3-xxxlarge"></i></div>
 					        <div class="w3-right">
-					          <h3>2</h3>
+					          <h4>2</h4>
 					        </div>
 					        <div class="w3-clear"></div>
 					        <h4>Your Referrals</h4>
@@ -69,7 +94,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 					      <div class="w3-container w3-teal w3-padding-16">
 					        <div class="w3-left"><i class="fa fa-usd w3-xxxlarge"></i></div>
 					        <div class="w3-right">
-					          <h3>$20</h3>
+					          <h4>$20</h4>
 					        </div>
 					        <div class="w3-clear"></div>
 					        <h4>Total Earnings</h4>
@@ -107,27 +132,42 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
 		<script type="text/Javascript">	
 
+		// Event Listeners
 		document.getElementById("register").addEventListener("click", handleRegister);
 		document.getElementById("login").addEventListener("click", handleLogin);
 		document.getElementById("logout").addEventListener("click", handleSignout);
-		
+		document.getElementById("submitPasswordReset").addEventListener("click", resetPassword);
 
+		// View Controllers
+		function displayProfile() {
+				document.getElementById("signupForm").style.display = 'none';
+				document.getElementById("profile").style.display = 'block';
+		};
+
+		function displaySignup() {
+				document.getElementById("signupForm").style.display = 'block';
+				document.getElementById("profile").style.display = 'none';
+		};
+		
+		// Regsitration and Login Logic
 		function handleRegister() {
 			var email = document.getElementById("email").value
 			var password = document.getElementById("password").value
 
-			firebase.auth().createUserWithEmailAndPassword(email, password).then(function pushData() {
-            var user = firebase.auth().currentUser
-            var uid = user.uid
+			firebase.auth().createUserWithEmailAndPassword(email, password).then(function() {
+					var user = firebase.auth().currentUser
+	            var uid = user.uid
 
-            firebase.database().ref('referrers/' + user.uid).set({
-                  email: email,
-                  refCandyCode: ''
-        })
-      document.getElementById("yourName").innerHTML = 'Welcome, ' + '' + email;
-	  	displayProfile();
-		})
-	};
+	            firebase.database().ref('referrers/' + user.uid).set({
+	                  email: email,
+	                  refCandyCode: ''
+		        })
+		      document.getElementById("yourName").innerHTML = 'Welcome, ' + '' + email;
+			  	displayProfile();
+				}, function(error){
+					alert(error.message);
+				})
+			};
 
 		function handleLogin() {
 			var email = document.getElementById("email").value
@@ -144,7 +184,9 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 		        }
         document.getElementById("yourName").innerHTML = 'Welcome, ' + '' + userEmail; 		
 				displayProfile();
-			})
+			}, function(error){
+					alert(error.message);
+				})
 		};
 
 		function handleSignout() {
@@ -152,15 +194,37 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 		  displaySignup()
 		};
 
-		function displayProfile() {
-				document.getElementById("signupForm").style.display = 'none';
-				document.getElementById("profile").style.display = 'block';
-		};
+		// Forgot Password Logic
 
-		function displaySignup() {
-				document.getElementById("signupForm").style.display = 'block';
-				document.getElementById("profile").style.display = 'none';
-		};
+			// When the user clicks anywhere outside of the modal, close it
+			var modal = document.getElementById('forgotPassword');
+			window.onclick = function(event) {
+			    if (event.target == modal) {
+			        modal.style.display = "none";
+			    }
+}
+
+		function resetPassword () {
+		  var auth = firebase.auth();
+		  const emailAddress = document.getElementById('forgotPasswordEmail').value;
+		  auth.sendPasswordResetEmail(emailAddress).then(function() {
+		    // Display the result of the reset password submission
+		    document.getElementById('forgotPasswordForm').style.display = "none";
+		    document.getElementById('submitPasswordReset').style.display = "none";
+		    document.getElementById('forgotPasswordResult').style.display = "block";
+		    document.getElementById('forgotPasswordResult').innerHTML = "Thank you. Please check your email for a link to reset your password.";
+
+		  }, function(error) {
+		      // Display Error Message
+		    document.getElementById('forgotPasswordResult').innerHTML = 
+		        "<div class=\"alert alert-danger\" role=\"alert\" align=\"center\"> \
+		        <strong>" + error.message + "</strong>\
+		      </div>";
+		  });
+	}
+
+
+
 		
 		</script>
 
