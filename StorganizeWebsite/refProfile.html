@@ -42,16 +42,15 @@
 	<!-- Register / Login Page Header -->
 	<div class="container" id="registerLoginForm" style="display:block">
 		<h1 class="header center orange-text">Storganize Advocate Portal</h1>
-		<!-- Register/Login tab selector -->	
-					<div class="container">
-				      <ul class="tabs">
-				        <li class="tab col s3"><a class="active" href="#registerForm">Register</a></li>
-				        <li class="tab col s3"><a href="#loginForm">Login</a></li>
-				      </ul>
-				  </div>
+				  
 
 		<!-- Register Form-->
-		
+
+		<div class="card-panel">
+	      <ul class="tabs" style="width:75%">
+	        <li class="tab col s3 hoverable"><a class="active" href="#registerForm">Register</a></li>
+	        <li class="tab col s3 hoverable"><a href="#loginForm">Login</a></li>
+	      </ul>	
 		    <form class="container" id="registerForm">
 		    	<div class="row">
 		        	<div class="input-field">
@@ -84,11 +83,12 @@
 		        	</div>
 	      	  	</div>
 		        <div class="row">
-			      <button class="btn waves-effect waves-light btn-large" id="register">
-			          Register
-			      </button>
+				      <button class="btn waves-effect waves-light btn-large" id="register">
+				          Register
+				      </button>
 		      	</div>
 		    </form>
+
 
 	
 
@@ -107,7 +107,7 @@
     	<div class="input-field">
         <input id="loginPassword" type="password" class="validate">
         <label for="password">Input Password</label>
-        <span class=""><a href="#" onclick="document.getElementById('forgotPassword').style.display='block'">Forgot password?</a></span>
+        <a class="modal-trigger" href="#forgotPasswordModal">Forgot password?</a>
     	</div>
 	  	</div>
 	  <div class="row">
@@ -118,12 +118,26 @@
 	 </form>
 </div>
 
+</div>
+
 	<!--Forgot Password Modal-->
-			
+	<div id="forgotPasswordModal" class="modal">
+    <div class="modal-content" id="forgotPasswordForm">
+      <h4>Forgot Your Password?</h4>
+	      <input id="forgotPasswordEmail" type="email" class="validate">
+	      <label for="email" data-error="wrong" data-success="right">Please enter the email address associated with your account</label>
+    </div>
+    <div class="container" id="forgotPasswordResult" style="display:none">
+	  </div>
+    <div class="modal-footer">
+      <button class="waves-effect waves-green btn-flat" id="submitPasswordReset">Submit</button>
+      <button class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</button>
+    </div>
+  </div>
 
 	<!-- Profile HTML is below-->
 		
-	<div class="container" id="profile" style="display:none">
+	<div id="profile" style="display:none">
 		<!-- Welcome Text -->
 		<h1 class="center-align" id="yourName">Brendan's Profile</h1>
 		<!-- Referral Link Card -->
@@ -137,7 +151,7 @@
 		        </div>
 		        <div class="row">
 		          <div class="card-panel white" style="padding:0px">
-		          <p class="center-align flow-text black-text" id="referralLink" value="http://storganize.refr.cc/brendand">http://storganize.refr.cc/brendand</p>
+		          <p class="center-align black-text" id="referralLink" value="http://storganize.refr.cc/brendand">http://storganize.refr.cc/brendand</p>
 		          </div>
 		        </div>
 		        <div class="card-action">
@@ -157,7 +171,7 @@
 		        </div>
 		        <div class="row">
 		          <div class="card-panel white" style="padding:0px">
-		          <p class="center-align flow-text black-text" id="referralCode">testCODE</p>
+		          <p class="center-align black-text" id="referralCode">testCODE</p>
 		          </div>
 		        </div>
 		         <div class="card-action">
@@ -202,6 +216,7 @@
 		document.getElementById("register").addEventListener("click", handleRegister);
 		document.getElementById("login").addEventListener("click", handleLogin);
 		document.getElementById("logout").addEventListener("click", handleSignout);
+		document.getElementById("submitPasswordReset").addEventListener("click", resetPassword);
 
 		// View Controllers
 		function displayProfile() {
@@ -293,6 +308,11 @@
 		      </div>";
 		  });
 	}
+
+	$(document).ready(function(){
+    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+    $('.modal').modal();
+  })
 
 
 
