@@ -36,23 +36,27 @@
 </head>
 
 <body class="#fafafa grey lighten-5">
-	
+<div style="text-align: center;">
+<a class="waves-effect waves-light btn-large" id="openRegLoginForm">
+				          Apply
+				      </a>
+</div>
 	<!-- All HTML for signup and profile is below -->
-	
 
+	
+    
+	
+<div id="registerForm" class="modal">
+<div class="modal-content">
 	<!-- Register / Login Page Header -->
-	<div class="container" id="registerLoginForm" style="display:block;">
+	<div class="container">
 		<h1 class="header center orange-text">Storganize Advocate Portal</h1>
 				  
 
 		<!-- Register Form-->
 
 		<div class="card-panel">
-	      <ul class="tabs" style="width:75%">
-	        <li class="tab col s3 hoverable" id="regSelect"><a class="active">Register</a></li>
-	        <li class="tab col s3 hoverable" id="loginSelect"><a>Login</a></li>
-	      </ul>	
-		    <form class="container" id="registerForm" onsubmit="return validateForm()" style="display: none">
+		    <form class="container" id="registerForm">
 		    	<div class="row">
 		        	<div class="input-field">
 		        		<input id="firstName" type="text" class="validate" required>
@@ -90,175 +94,31 @@
 				      </a>
 		      	</div>
 		    </form>
-
-
-	
-
-<!-- INSERT LOADING PAGE HERE TO ALLOW REFERRAL CANDY TO PROCESS -->
-
-	<!-- Login Form -->
-
-	<form class="container" id="loginForm" style="display:none">
-		<div class="row">
-    	<div class="input-field">
-    		<input id="loginEmail" type="email" class="validate">
-        <label for="email">Email</label>
-    	</div>
-	  </div>
-	 	<div class="row">
-    	<div class="input-field">
-        <input id="loginPassword" type="password" class="validate">
-        <label for="password">Input Password</label>
-        <a class="modal-trigger" href="#forgotPasswordModal">Forgot password?</a>
-    	</div>
-	  	</div>
-	  	<div id="errorMessageLogin"></div>
-	  <div class="row">
-	  	<a class="waves-effect waves-light btn-large" id="login">
-			          Login
-			</a>
-	  </div>
-	 </form>
+</div>
+</div>
+</div>
 </div>
 
-</div>
-
-	<!--Forgot Password Modal-->
-	<div id="forgotPasswordModal" class="modal">
-    <div class="modal-content" id="forgotPasswordForm">
-      <h4>Forgot Your Password?</h4>
-	      <input id="forgotPasswordEmail" type="email" class="validate">
-	      <label for="email" data-error="wrong" data-success="right">Please enter the email address associated with your account</label>
-    </div>
-    <div class="container" id="forgotPasswordResult" style="display:none">
-	  </div>
-    <div class="modal-footer">
-      <button class="waves-effect waves-green btn-flat" id="submitPasswordReset">Submit</button>
-      <button class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</button>
-    </div>
-  </div>
-
-	<!-- Profile HTML is below-->
-		
-	<div id="profile" style="display:none;">
-		<!-- Welcome Text -->
-		<h1 class="center-align" id="yourName">Brendan's Profile</h1>
-		<!-- Referral Link Card -->
-		<div class="row">
-			<div class="col l6 s12">
-	    	<div class="card-panel" style="background-color:#f44336">
-		        <div class="row">
-		        	<div class="card-content white-text">
-		              <span class="flow-text white-text">Your Referral Link</span>
-		          </div>
-		        </div>
-		        <div class="row">
-		          <div class="card-panel white" style="padding:0px">
-		          <p class="center-align black-text" id="referralLink" value="http://storganize.refr.cc/brendand">http://storganize.refr.cc/brendand</p>
-		          </div>
-		        </div>
-		        <div class="card-action">
-		        	<a class="waves-effect waves-light btn" data-clipboard-target="#referralLink">
-    						Copy to clipboard</a>
-		    		</div>
-	  		</div>
-	  	</div>
-	  <!-- Referral Code Card -->
-	  
-			<div class="col l6 s12">
-	    	<div class="card-panel" style="background-color:#2196F3">
-		        <div class="row">
-		        	<div class="card-content white-text">
-		              <span class="flow-text white-text">Your Referral Code</span>
-		          </div>
-		        </div>
-		        <div class="row">
-		          <div class="card-panel white" style="padding:0px">
-		          <p class="center-align black-text" id="referralCode">testCODE</p>
-		          </div>
-		        </div>
-		         <div class="card-action">
-		          <a class="waves-effect waves-light btn" data-clipboard-target="#referralCode">
-    						Copy to clipboard</a>
-		    		</div>
-	  		</div>
-	  	</div>
-	 
 	
-
-						<!-- Earnings Card -->
-					<div class="col l6 s12">
-			    	<div class="card-panel orange">
-				        <div class="row">
-				        	<div class="left-align card-content white-text">
-				              <span class="flow-text white-text">Your Earnings</span>
-				        	</div>
-					        <div class="col l4 s4"></div>
-					        <div class="col l4 s4 center-align card-panel white">
-					          <h4> $20 </h4>
-					        </div>
-				        	<div class="col l4 s4"></div>
-				        </div>
-				    </div>
-			  	</div>
-			  	<div class="col l6 s12">
-			    	<div class="card-panel teal">
-				        <div class="row">
-				        	<div class="left-align card-content white-text">
-				              <span class="flow-text white-text">Link Tracker</span>
-				          </div>
-				          	<p class="left-align white-text">Total Referrals: 2</p>
-				          	<p class="left-align white-text">Total Cash Earned: $20</p>
-				        </div>
-				    </div>
-			  	</div>
-			  	<div class="center-align">
-				  	<a class=" waves-effect waves-light btn-large orange" id="logout">Log Out</a>
-				  	</div>
-				
-			</div>
-		</div>
 			     
-
-
 		
 
 		<!-- All Javascript logic is contained within the below script tag for easy embed on Squarespace. When we transition to Storganize App, this code should be placed within a standard index.js file-->
 
 		<script type="text/Javascript">	
-		new Clipboard('.btn');
+
 		// Event Listeners
 		document.getElementById("register").addEventListener("click", handleRegister);
-		document.getElementById("login").addEventListener("click", handleLogin);
-		document.getElementById("logout").addEventListener("click", handleSignout);
-		document.getElementById("submitPasswordReset").addEventListener("click", resetPassword);
-		document.getElementById("regSelect").addEventListener("click", displayRegForm );
-		document.getElementById("loginSelect").addEventListener("click", displayLoginForm);
+		document.getElementById("openRegLoginForm").addEventListener("click", displayModal);
+		
 		// View Controllers
-		function displayProfile() {
-			
-				document.getElementById("registerLoginForm").style.display = 'none';
-				document.getElementById("profile").style.display = 'block';
+		function displayProfile() {	
+				window.location="https://www.storganize.io/test-advocate-profile";
 			  window.scrollTo(0,0)
 		};
-		function displaySignup() {
-				document.getElementById("registerLoginForm").style.display = 'block';
-				document.getElementById("profile").style.display = 'none';
-				window.scrollTo(0,0)
-		};
 
-		function displayRegForm() {
-			document.getElementById("registerForm").style.display = 'block';
-			document.getElementById("loginForm").style.display = 'none';
-			$('ul.tabs').tabs('select_tab', 'regSelect')
-			window.scrollTo(0,0)
-		}
-
-		function displayLoginForm() {
-			document.getElementById("loginForm").style.display = 'block';
-			document.getElementById("registerForm").style.display = 'none';
-			$('ul.tabs').tabs('select_tab', 'loginSelect')
-			window.scrollTo(0,0)
+		function displayModal() {
+			$("#registerForm").modal('open');
 		}
 
 		
@@ -286,63 +146,16 @@
 						                  orgName: orgName,
 						                  refCandyCode: ''
 							        })
-							      document.getElementById("yourName").innerHTML = 'Welcome, ' + '' + firstName;
 								  	displayProfile();
 									}, function(error){
 										document.getElementById('errorMessage').innerHTML = "<span style='color: red;'>" + error.message + "</span>"
 									})
 							}
 			};
-		function handleLogin() {
-			var email = document.getElementById("loginEmail").value
-			var password = document.getElementById("loginPassword").value
-			// Log in the user and append his/her email to the top of the profile page
-		      firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
-		        var user = firebase.auth().currentUser;
-		        var userEmail;
-		        if (user != null) {
-		          userEmail = user.email; 
-		        }
-        document.getElementById("yourName").innerHTML = 'Welcome, ' + '' + email; 		
-				displayProfile();
-			}, function(error){
-					alert(error.message);
-				})
-		};
-		function handleSignout() {
-		  firebase.auth().signOut()
-		  displaySignup()
-		};
-		// Forgot Password Logic
-			// When the user clicks anywhere outside of the modal, close it
-			var modal = document.getElementById('forgotPassword');
-			window.onclick = function(event) {
-			    if (event.target == modal) {
-			        modal.style.display = "none";
-			    }
-}
-		function resetPassword () {
-		  var auth = firebase.auth();
-		  const emailAddress = document.getElementById('forgotPasswordEmail').value;
-		  auth.sendPasswordResetEmail(emailAddress).then(function() {
-		    // Display the result of the reset password submission
-		    document.getElementById('forgotPasswordForm').style.display = "none";
-		    document.getElementById('submitPasswordReset').style.display = "none";
-		    document.getElementById('forgotPasswordResult').style.display = "block";
-		    document.getElementById('forgotPasswordResult').innerHTML = "Thank you. Please check your email for a link to reset your password.";
-		  }, function(error) {
-		      // Display Error Message
-		    document.getElementById('forgotPasswordResult').innerHTML = 
-		        "<div class=\"alert alert-danger\" role=\"alert\" align=\"center\"> \
-		        <strong>" + error.message + "</strong>\
-		      </div>";
-		  });
-	}
 
 	$(document).ready(function(){
     // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     $('.modal').modal();
-    document.getElementById("registerForm").style.display = 'block';
   })
 		
 		</script>

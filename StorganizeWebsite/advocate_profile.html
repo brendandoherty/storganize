@@ -1,0 +1,105 @@
+<!-- Profile HTML is below-->
+		
+	<div id="profile" style="display:block;">
+		<!-- Welcome Text -->
+		<h1 class="center-align" id="yourName">Brendan's Profile</h1>
+		<!-- Referral Link Card -->
+		<div class="row">
+			<div class="col l6 s12">
+	    	<div class="card-panel" style="background-color:#f44336">
+		        <div class="row">
+		        	<div class="card-content white-text">
+		              <span class="flow-text white-text">Your Referral Link</span>
+		          </div>
+		        </div>
+		        <div class="row">
+		          <div class="card-panel white" style="padding:0px">
+		          <p class="center-align black-text" id="referralLink" value="http://storganize.refr.cc/brendand">http://storganize.refr.cc/brendand</p>
+		          </div>
+		        </div>
+		        <div class="card-action">
+		        	<a class="waves-effect waves-light btn" data-clipboard-target="#referralLink">
+    						Copy to clipboard</a>
+		    		</div>
+	  		</div>
+	  	</div>
+	  <!-- Referral Code Card -->
+	  
+			<div class="col l6 s12">
+	    	<div class="card-panel" style="background-color:#2196F3">
+		        <div class="row">
+		        	<div class="card-content white-text">
+		              <span class="flow-text white-text">Your Referral Code</span>
+		          </div>
+		        </div>
+		        <div class="row">
+		          <div class="card-panel white" style="padding:0px">
+		          <p class="center-align black-text" id="referralCode">testCODE</p>
+		          </div>
+		        </div>
+		         <div class="card-action">
+		          <a class="waves-effect waves-light btn" data-clipboard-target="#referralCode">
+    						Copy to clipboard</a>
+		    		</div>
+	  		</div>
+	  	</div>
+	 
+	
+
+						<!-- Earnings Card -->
+					<div class="col l6 s12">
+			    	<div class="card-panel orange">
+				        <div class="row">
+				        	<div class="left-align card-content white-text">
+				              <span class="flow-text white-text">Your Earnings</span>
+				        	</div>
+					        <div class="col l4 s4"></div>
+					        <div class="col l4 s4 center-align card-panel white">
+					          <h4> $20 </h4>
+					        </div>
+				        	<div class="col l4 s4"></div>
+				        </div>
+				    </div>
+			  	</div>
+			  	<div class="col l6 s12">
+			    	<div class="card-panel teal">
+				        <div class="row">
+				        	<div class="left-align card-content white-text">
+				              <span class="flow-text white-text">Link Tracker</span>
+				          </div>
+				          	<p class="left-align white-text">Total Referrals: 2</p>
+				          	<p class="left-align white-text">Total Cash Earned: $20</p>
+				        </div>
+				    </div>
+			  	</div>
+			  	<div class="center-align">
+				  	<a class=" waves-effect waves-light btn-large orange" id="logout">Log Out</a>
+				  	</div>
+				
+			</div>
+		</div>
+
+<!-- JAVASCRIPT -->
+
+<script type="text/Javascript">	
+new Clipboard('.btn');
+// Event Listeners
+document.getElementById("logout").addEventListener("click", handleSignout);
+
+
+function displaySignup() {
+				window.location="https://www.storganize.io/advocate-login";
+				window.scrollTo(0,0)
+		};
+
+function handleSignout() {
+		  firebase.auth().signOut()
+		  displaySignup()
+		};
+
+
+</script>
+
+
+
+
