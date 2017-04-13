@@ -4020,22 +4020,6 @@
               <div class="card horizontal">
                 <div class="card-stacked">
                   <div class="card-content #fafafa">
-
-                  <!-- Brendan's Edits -->
-                    <div class="col s12 center">
-                      <div class="row">
-                        <h4>Please provide your address</h4>
-                      </div>
-                      <div class="row">
-                        <div class="col m6 s12">
-                          <i class="material-icons" style="font-size: 72px;color: #ff8b38;">today</i>
-                          <h6>Select Pickup Date</h6>
-                          <input id="pickupDate" type="date" class="datepicker col m8 offset-m2 s10 offset-s1 center">
-                        </div>
-                      </div>
-                    </div>
-
-
                     <div class="col s12 center">
                       <div class="col s10 offset-s1 m6 offset-m3">
                         
@@ -4408,10 +4392,200 @@
 
       <!-- Box Drop Off Request -->
       <button id="boxRequestButton" onclick="myFunction('boxRequest')" class="w3-button w3-block w3-left-align collapsibleHeader"><i class="material-icons icons">perm_identity</i>Request Free Boxes (Optional)</button>
-      <div id="boxRequest" class="w3-hide w3-container collapsibleBody w3-animate-opacity">
-        <iframe src="https://app.acuityscheduling.com/schedule.php?owner=11393255&appointmentType=1199172" width="100%" height="800" frameBorder="0"></iframe>
-        <script src="https://d3gxy7nm8y4yjr.cloudfront.net/js/embed.js" type="text/javascript"></script>
+      <div id="boxRequest" class="w3-hide w3-container collapsibleBody w3-animate-opacity" style="display: inline;">
+        <div id="boxRequestForm" class="row center">
+            <div class="col m10 offset-m1">
+              <div class="card horizontal">
+                <div class="card-stacked">
+                  <div class="card-content">
+                    <div class="col s12 center">
+                      <div class="row">
+                        <h4>Step 1: How many boxes would you like?</h4>
+                        <p>Our boxes ship in packs of 8</p>
+                      </div>
+                      <div class="row">
+                      <div class="col s2 m2"> 
+                      </div>
+                        <div class="input-field">
+                          <select id="boxNumber" class="input-field col s12 m4 offset-m2 browser-default">
+                            <option value="" disabled selected></option>
+                              <option value="8 boxes">8 boxes</option>
+                              <option value="16 boxes">16 boxes</option>
+                              <option value="24 boxes">24 boxes</option>
+                          </select>
+                        </div>
+                      <div class="col s2 m2"> 
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col m10 offset-m1">
+              <div class="card horizontal">
+                <div class="card-stacked">
+                  <div class="card-content">
+                    <div class="col s12 center">
+                      <h4>Step 2: Please Provide Your Shipping Information</h4>
+
+                      <div class="row">
+                        <div class="input-field col s12 m6">
+                          <i class="material-icons prefix">account_circle</i>
+                          <input id="boxFirstName" type="text" class="validate">
+                          <label for="boxFirstName">First Name</label>
+                        </div>
+                        <div class="input-field col s12 m6">
+                          <i class="material-icons prefix">account_circle</i>
+                          <input id="boxLastName" type="text" class="validate">
+                          <label for="boxLastName">Last Name</label>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="input-field col s12 m6">
+                          <i class="material-icons prefix">phone</i>
+                          <input id="boxPhoneNumber" type="text" class="validate">
+                          <label for="boxPhoneNumber">Mobile Number</label>
+                        </div>
+                        <div class="input-field col s12 m6">
+                          <i class="material-icons prefix">email</i>
+                          <input id="boxEmail" type="text" class="validate">
+                          <label for="boxEmail">Confirmation Email</label>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <h6 class="col s12">Do you live in a dorm, apartment, or house?</h6>
+                        <div class="input-field">
+                          <select id="boxHousingType" class="browser-default col s12 m6 offset-m3" style="border: initial;">
+                            <option value="" disabled selected>Choose your option</option>
+                            <option value="dorm">Dorm</option>
+                            <option value="apartment">Apartment</option>
+                            <option value="house">House</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div id="boxHousingTypeDorm" class="row" style="display: none;">
+                        <h6 class="col s12">Which Dorm?</h6>
+                        <div class="input-field">
+                          <select id="boxDormSelection" class="browser-default col s12 m6 offset-m3" style="border: initial;">
+                            <option value="" disabled selected>Choose your option</option>
+                          </select>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12 m8 offset-m2">
+                              <input id="roomNumber" type="text" class="validate">
+                              <label for="roomNumber">Room Number</label>
+                            </div>
+                        </div>
+                      </div>
+                      <div id="boxHousingTypeApt" class="row" style="display: none">
+                        <div class="input-field col s12 m8 offset-m2">
+                          <input id="boxAddressStreet1" type="text" class="validate">
+                          <label for="boxAddressStreet1">Address Line 1</label>
+                        </div>
+                        <div class="input-field col s12 m8 offset-m2">
+                          <input id="boxAddressStreet2" type="text" class="validate">
+                          <label for="boxAddressStreet2">Address Line 2</label>
+                        </div>
+                        <div class="input-field col s12 m3 offset-m2">
+                          <input id="boxAddressCity" type="text" class="validate">
+                          <label for="boxAddressCity">City</label>
+                        </div>
+                        <div class="input-field">
+                          <select id="boxAddressState" class="input-field col s12 m2 browser-default">
+                            <option value="" disabled selected>State</option>
+                              <option value="AL">AL</option>
+                              <option value="AK">AK</option>
+                              <option value="AZ">AZ</option>
+                              <option value="AR">AR</option>
+                              <option value="CA">CA</option>
+                              <option value="CO">CO</option>
+                              <option value="CT">CT</option>
+                              <option value="DE">DE</option>
+                              <option value="DC">DC</option>
+                              <option value="FL">FL</option>
+                              <option value="GA">GA</option>
+                              <option value="HI">HI</option>
+                              <option value="ID">ID</option>
+                              <option value="IL">IL</option>
+                              <option value="IN">IN</option>
+                              <option value="IA">IA</option>
+                              <option value="KS">KS</option>
+                              <option value="KY">KY</option>
+                              <option value="LA">LA</option>
+                              <option value="ME">ME</option>
+                              <option value="MD">MD</option>
+                              <option value="MA">MA</option>
+                              <option value="MI">MI</option>
+                              <option value="MN">MN</option>
+                              <option value="MS">MS</option>
+                              <option value="MO">MO</option>
+                              <option value="MT">MT</option>
+                              <option value="NE">NE</option>
+                              <option value="NV">NV</option>
+                              <option value="NH">NH</option>
+                              <option value="NJ">NJ</option>
+                              <option value="NM">NM</option>
+                              <option value="NY">NY</option>
+                              <option value="NC">NC</option>
+                              <option value="ND">ND</option>
+                              <option value="OH">OH</option>
+                              <option value="OK">OK</option>
+                              <option value="OR">OR</option>
+                              <option value="PA">PA</option>
+                              <option value="RI">RI</option>
+                              <option value="SC">SC</option>
+                              <option value="SD">SD</option>
+                              <option value="TN">TN</option>
+                              <option value="TX">TX</option>
+                              <option value="UT">UT</option>
+                              <option value="VT">VT</option>
+                              <option value="VA">VA</option>
+                              <option value="WA">WA</option>
+                              <option value="WV">WV</option>
+                              <option value="WI">WI</option>
+                              <option value="WY">WY</option>
+                          </select>
+                        </div>
+                        <div class="input-field col s12 m3">
+                          <input id="boxAddressZip" type="text" class="validate">
+                          <label for="boxAddressZip">Zipcode</label>
+                        </div>
+                      </div>
+                        <div class="row">
+                          <a class="waves-effect waves-light btn-large col s4 offset-s4 disabled" id="submitBoxForm" style="background-color: #ff8b38">
+                            Submit
+                          </a>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+            <!-- Box Request Confirmed -->
+          <div id="boxRequestConfirmed" class="row" style="display: none;">
+            <div class="col m10 offset-m1">
+              <div class="card horizontal">
+                <div class="card-stacked">
+                  <div class="card-content">
+                    <div class="col s12 center">
+                      <div class="col s10 offset-s1 m6 offset-m3">
+                        <i class="large material-icons green accent-3" style="font-size: 150px;color: #00e676">done</i>
+                        <h3 style="margin-top: 0px;">Thanks! Your box request has been completed.</h3>
+                        <h6>You should receive your boxes in the mail via Amazon Prime within 3-4 days.</h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- End Box Request Confirmed -->
       </div>
+
+
       <!-- End Box Drop Off Request -->
 
       <!-- View Items -->
@@ -4535,13 +4709,28 @@
       $("#pickupDate").on('change', vetDateDisplayTimes);
       $("#scheduleType").on('change', displayScheduleType);
       $("#housingType").on('change', housingTypePt2);
+      $("#boxHousingType").on('change', boxHousingType);
       document.getElementById('submitPickupForm').addEventListener('click', submitPickupForm);
+      document.getElementById('submitBoxForm').addEventListener('click', submitBoxForm);
       document.getElementById('pickupTime').addEventListener('click', function() {
         if (!document.getElementById('pickupDate').value) {
           Materialize.toast('Please select a pickup date before selecting a pickup time.', 4000);
         } 
       });
 
+      // Event Listeners for activating the Submit button on the box request form
+
+      $("#boxFirstName").on('change', displayBoxSubmitButton);
+      $("#boxLastName").on('change', displayBoxSubmitButton);
+      $("#boxHousingType").on('change', displayBoxSubmitButton);
+      $("#boxDormSelection").on('change', displayBoxSubmitButton);
+      $("#roomNumber").on('change', displayBoxSubmitButton);
+      $("#boxAddressStreet1").on('change', displayBoxSubmitButton);
+      $("#boxAddressStreet2").on('change', displayBoxSubmitButton);
+      $("#boxAddressCity").on('change', displayBoxSubmitButton);
+      $("#boxAddressState").on('change', displayBoxSubmitButton);
+      $("#boxAddressZip").on('change', displayBoxSubmitButton);
+      $("#boxNumber").on('change', displayBoxSubmitButton);
 
       // Event Listener for Auth State Change
       firebase.auth().onAuthStateChanged(handleAuthStateChange);
@@ -4647,7 +4836,6 @@
           apptId = model.customer.aptPlanId;
         }
         
-
         var payload = {
           datetime: dateTime,
           appointmentTypeID: apptId,
@@ -4705,7 +4893,122 @@
             console.log(data);
           });
 
-      }
+      };
+
+
+// Submit a new box (shipping) request, update the customer in the DB and create a unique transfer in the DB
+
+// Disable the "Submit" button until all the form fields have been completed
+
+      function displayBoxSubmitButton() {
+        var fName = document.getElementById('boxFirstName').value;
+        var lName = document.getElementById('boxLastName').value;
+        var bEmail = document.getElementById('boxEmail').value;
+        var bPhone = document.getElementById('boxPhoneNumber').value;
+        var hType = document.getElementById('boxHousingType').value;
+        var dType = document.getElementById('boxDormSelection').value;
+        var rNum = document.getElementById('roomNumber').value;
+        var ad1 = document.getElementById('boxAddressStreet1').value;
+        var ad2 = document.getElementById('boxAddressStreet2').value;
+        var adCity = document.getElementById('boxAddressCity').value;
+        var adState = document.getElementById('boxAddressState').value;
+        var adZip = document.getElementById('boxAddressZip').value;
+        var boxNum = document.getElementById('boxNumber').value;
+
+        if (fName !== '' && lName !== '' && bEmail !== '' && bPhone !== '' && hType !== '' && dType !== '' && rNum !== '' && boxNum !== '') {
+            document.getElementById('submitBoxForm').classList.remove('disabled');
+        } else if (fName !== '' && lName !== '' && bEmail !== '' && bPhone !== '' && ad1 !== '' && ad2 !== '' && adCity !== '' && adState !== '' && adZip !== '' && boxNum !== '') {
+            document.getElementById('submitBoxForm').classList.remove('disabled');
+        };
+    };
+
+
+// Generate a unique ID for a new transfer in the transfers list on the DB
+      function makeTransferCode() {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnpqrstuvwxyz111112222233333444445555566666777778888899999";
+        for( var i=0; i < 5; i++ )
+          text += possible.charAt(Math.floor(Math.random() * possible.length));
+        return text;
+      };
+
+      function submitBoxForm() {
+        document.getElementById('boxRequestForm').style.display = 'none';
+        document.getElementById('boxRequestConfirmed').style.display = 'inline';
+
+        // Log Selections to the Model
+        
+        // Personal Info
+        model.customer.firstName = document.getElementById('boxFirstName').value;
+        model.customer.lastName = document.getElementById('boxLastName').value;
+        model.customer.phoneNumber = document.getElementById('boxPhoneNumber').value;
+        model.customer.email = document.getElementById('boxEmail').value;
+        
+        // Housing Type
+        model.customer.housingType = document.getElementById('boxHousingType').value;
+        
+        // Dorm
+        model.customer.dormSelection = document.getElementById('boxDormSelection').value;
+        model.customer.roomNumber = document.getElementById('roomNumber').value;
+        
+        // Address
+        model.customer.addressStreet1 = document.getElementById('boxAddressStreet1').value;
+        model.customer.addressStreet2 = document.getElementById('boxAddressStreet2').value;
+        model.customer.addressCity = document.getElementById('boxAddressCity').value;
+        model.customer.addressState = document.getElementById('boxAddressState').value;
+        model.customer.addressZip = document.getElementById('boxAddressZip').value;
+
+        // # of Boxes Requested
+
+        var boxNumber = document.getElementById('boxNumber').value;
+
+      
+        // Update the customer object in the database
+            var updateCust = {
+              firstName: model.customer.firstName,
+              lastName: model.customer.lastName,
+              email: model.customer.email,
+              phone: model.customer.phoneNumber,
+              housingType: model.customer.housingType,
+              roomNumber: model.customer.roomNumber,
+              dormSelection: model.customer.dormSelection,
+              addressStreet1: model.customer.addressStreet1,
+              addressStreet2: model.customer.addressStreet2,
+              addressCity: model.customer.addressCity,
+              addressState: model.customer.addressState,
+              addressZip: model.customer.addressZip
+            };
+            var custRef = firebase.database().ref("customers/" + model.uid);
+            custRef.update(updateCust);
+
+        // Create a new transfer in the database
+
+          // Get the timestamp of the request (currently in GMT, but not a top priority to change this now)
+          var dt = new Date();
+          var utcDate = dt.toUTCString();
+          timestamp = utcDate;
+
+          var aptAddress = model.customer.addressStreet1 + ' ' + model.customer.addressStreet2 + ' ' + model.customer.addressCity + ' ' + model.customer.addressState + ' ' + model.customer.addressZip;
+          var dormAddress = model.customer.dormSelection + ' ' + model.customer.roomNumber;
+          var transferCode = makeTransferCode();
+
+          var updateTransfer = {};
+            updateTransfer[transferCode] = {
+              dateCreated: timestamp,
+              firstName: model.customer.firstName,
+              lastName: model.customer.lastName,
+              email: model.customer.email,
+              phone: model.customer.phoneNumber,
+              transferType: 'Ship Boxes',
+              transferToDormAddress: dormAddress,
+              transferToAptAddress: aptAddress,
+              boxNumber: boxNumber,
+              transferFee: 0,
+              completed: false
+            };
+            var boxTransferRef = firebase.database().ref("transfers/" + model.uid);
+            boxTransferRef.update(updateTransfer);
+          };
 
 
       function housingTypePt2() {
@@ -4723,6 +5026,23 @@
           document.getElementById('housingTypeDorm').style.display = 'inline';
         } else if (document.getElementById('housingType').value === 'apartment' || document.getElementById('housingType').value === 'house') {
           document.getElementById('housingTypeApt').style.display = 'inline';
+        }
+      }
+
+      function boxHousingType() {
+
+        // Make Selection
+        if (document.getElementById('boxHousingType').value === 'dorm') {
+          model.dorms.forEach(function(dorm) {
+            var option = document.createElement("option");
+            option.text = dorm;
+            document.getElementById('boxDormSelection').appendChild(option);
+          });
+          document.getElementById('boxHousingTypeDorm').style.display = 'inline';
+          document.getElementById('boxHousingTypeApt').style.display = 'none';
+        } else if (document.getElementById('boxHousingType').value === 'apartment' || document.getElementById('boxHousingType').value === 'house') {
+          document.getElementById('boxHousingTypeApt').style.display = 'inline';
+          document.getElementById('boxHousingTypeDorm').style.display = 'none';
         }
       }
 
@@ -4775,6 +5095,33 @@
         // Activate the input fields that are filled in
         Materialize.updateTextFields();
       }
+
+      function seedBoxRequest(){
+        if (model.customer.firstName) {
+          document.getElementById('boxFirstName').value = model.customer.firstName;
+        }
+        if (model.customer.lastName) {
+          document.getElementById('boxLastName').value = model.customer.lastName;
+        }
+        if (model.customer.housingType) {
+          document.getElementById('boxHousingType').value = model.customer.housingType;
+        }
+        if (model.customer.dormSelection) {
+          boxHousingType();
+          document.getElementById('boxDormSelection').value = model.customer.dormSelection;
+          document.getElementById('roomNumber').value = model.customer.roomNumber;
+        } else if (model.customer.addressStreet1) {
+          document.getElementById('boxAddressStreet1').value = model.customer.addressStreet1;
+          document.getElementById('boxAddressStreet2').value = model.customer.addressStreet2;
+          document.getElementById('boxAddressCity').value = model.customer.addressCity;
+          document.getElementById('boxAddressState').value = model.customer.addressState;
+          document.getElementById('boxAddressZip').value = model.customer.addressZip;
+        }
+
+        // Activate the input fields that are filled in
+        Materialize.updateTextFields();
+      }
+      
 
       function warmUpApi() {
         $.ajax({
@@ -5083,6 +5430,8 @@
               }
             });
           }
+          seedBoxRequest();
+          displayBoxSubmitButton();
         }
         window.scrollTo(0,0);
       }
