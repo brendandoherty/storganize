@@ -4255,21 +4255,19 @@ a {
         <div class="row">
           <div class=class="col m10 offset-m1">
             <div class="col s12 m6">
-              <ul class="collection with-header">
+              <ul id="toDoList" class="collection with-header">
                 <li class="collection-header"><h4>To Do</h4></li>
-                <li class="collection-item"><div>Schedule Your Pickup!!!<a href="#!" id="notificationSchedulePickup" class="secondary-content"><i class="material-icons">send</i></a></div></li>
                 <li class="collection-item"><div>Add A Payment Method<a href="#!" id="notificationAddPayment" class="secondary-content"><i class="material-icons">send</i></a></div></li>
                 <li class="collection-item"><div>Request Free Boxes (optional)<a href="#!" id="notificationRequestBoxes" class="secondary-content"><i class="material-icons">send</i></a></div></li>
               </ul> 
           </div>   
           <div class="col s12 m6">
-              <ul class="collection with-header">
+              <ul id="upcomingEventsCalendar" class="collection with-header">
                 <li class="collection-header"><h4>Events Calendar</h4></li>
                 <li class="collection-header"><b>Upcoming Events</b></li>
-                <li class="collection-item"><div>Saturday May 6th 3pm- Box Delivery- Anderson Hall<a href="#!" id="changeRequestBoxes" class="secondary-content">(change / cancel)</a></div></li>
-                <li class="collection-item"><div>Monday May 8th 10am- Box/Item Pickup- Anderson Hall<a href="#!" id="changeSchedulePickup" class="secondary-content">(change / cancel)</a></div></li> 
+              </ul> 
+              <ul id="pastEventsCalendar" class="collection with-header">
                 <li class="collection-header"><b>Past Events</b></li>
-                <li class="collection-item">Friday April 28th 10am- Box Delivery- Anderson Hall</li>
               </ul> 
           </div>  
           </div>
@@ -5116,21 +5114,13 @@ a {
         uid: null
       }
 
+      function setupSchedulePickup() {
+
       // Notifications event listeners
       document.getElementById('notificationSchedulePickup').addEventListener('click', displaySchedulePickup);
       document.getElementById('notificationAddPayment').addEventListener('click', displayAddPayment);
       document.getElementById('notificationRequestBoxes').addEventListener('click', displayRequestBoxes);
-      
 
-      // Display the box shipping form for CNU / ODU students and the box delivery form for AU
-      function displayCorrectBoxForm() {
-        if (model.customer.university === 'au') {
-          document.getElementById('boxDeliveryRequest').style.display = 'inline';
-          document.getElementById('boxShipRequest').style.display = 'none';
-        } else {
-          document.getElementById('boxDeliveryRequest').style.display = 'none';
-          document.getElementById('boxShipRequest').style.display = 'inline';
-        }
       };
 
       // Disable all days before today on calendar
@@ -5193,6 +5183,10 @@ a {
                 model.customer = (snapshot.val());
                 firebase.database().ref('/dorms/' + model.customer.university + 'Dorms/').once('value').then(function(snapshot) {
                   model.dorms = (snapshot.val());
+                  firebase.database().ref('/transfers/' + model.uid).once('value').then(function(snapshot) {
+                    model.transfers = (snapshot.val());
+                    seedToDoListPickup();
+                  });
                 });
               });
               document.getElementById('profile').style.display = 'inline';
@@ -5201,7 +5195,6 @@ a {
           });
 
           warmUpApi();
-
           console.log('in');
 
         } else {
@@ -5222,6 +5215,17 @@ a {
         });
       }
 
+       // Display the box shipping form for CNU / ODU students and the box delivery form for AU
+      function displayCorrectBoxForm() {
+        if (model.customer.university === 'au') {
+          document.getElementById('boxDeliveryRequest').style.display = 'inline';
+          document.getElementById('boxShipRequest').style.display = 'none';
+        } else {
+          document.getElementById('boxDeliveryRequest').style.display = 'none';
+          document.getElementById('boxShipRequest').style.display = 'inline';
+        }
+      };
+
 // Notifications Logic
     function displaySchedulePickup() {
         myFunction('schedule');
@@ -5233,6 +5237,92 @@ a {
 
       function displayRequestBoxes() {
         myFunction('boxRequest')
+      }
+
+      function seedToDoListPickup() {
+        if (model.transfers !== null) {
+          for (var transfer in model.transfers) {
+            if (!model.transfers[transfer].completed) {
+              addEventSchedulePickup();
+            } else if (model.transfers[transfer].completed === true && model.transfers[transfer].transferType === 'Pickup') {
+              addPastEventSchedulePickup();
+            }
+          } 
+      } else {
+            addToDoSchedulePickup();
+            }
+    }
+
+      function addToDoSchedulePickup() {
+        var li = document.createElement("li");
+        var t = document.createTextNode('Schedule Your Pickup!!!');
+        li.classList.add("collection-item")
+        li.appendChild(t);
+
+        var link = document.createElement("A");
+        link.href = "#!";
+        link.id = "notificationSchedulePickup";
+        link.className = "secondary-content";
+        li.appendChild(link);
+
+        var icon = document.createElement("I");
+        var text = document.createTextNode('send');
+        icon.classList.add("material-icons")
+        icon.appendChild(text);
+        link.appendChild(icon);
+
+        document.getElementById("toDoList").appendChild(li);
+        setupSchedulePickup();
+    }
+
+      function addEventSchedulePickup() {
+        var pickupDetails;
+
+        for (var transfer in model.transfers) {
+          var transferType = model.transfers[transfer].transferType;
+          var transferDate = model.transfers[transfer].transferDate;
+          var transferFromDorm = model.transfers[transfer].transferFromDorm;
+          var transferStartTime = model.transfers[transfer].transferStartTime;
+            if (!model.transfers[transfer].completed) {
+              pickupDetails = transferType + ' ' + 'scheduled for:' + ' ' + transferDate + ' ' + transferStartTime + ' ' + transferFromDorm
+          }
+        }
+
+        var li2 = document.createElement("li");
+        var t2 = document.createTextNode(pickupDetails);
+        li2.classList.add("collection-item")
+        li2.appendChild(t2);
+
+        var link2 = document.createElement("A");
+        var text = document.createTextNode('change / cancel');
+        link2.appendChild(text);
+        link2.href = "#!";
+        link2.id = "changeSchedulePickup";
+        link2.className = "secondary-content";
+        li2.appendChild(link2);
+
+        document.getElementById("upcomingEventsCalendar").appendChild(li2);
+      }
+
+      function addPastEventSchedulePickup() {
+        var pickupDetails;
+
+        for (var transfer in model.transfers) {
+          var transferType = model.transfers[transfer].transferType;
+          var transferDate = model.transfers[transfer].transferDate;
+          var transferFromDorm = model.transfers[transfer].transferFromDorm;
+          var transferStartTime = model.transfers[transfer].transferStartTime;
+            if (model.transfers[transfer].completed) {
+              pickupDetails = transferType + ' ' + 'on:' + ' ' + transferDate + ' ' + transferStartTime + ' ' + transferFromDorm
+          }
+        }
+
+        var li2 = document.createElement("li");
+        var t2 = document.createTextNode(pickupDetails);
+        li2.classList.add("collection-item")
+        li2.appendChild(t2);
+
+        document.getElementById("pastEventsCalendar").appendChild(li2);
       }
 
 // Schedule a Pickup Logic
@@ -5310,17 +5400,13 @@ a {
 
             var transfer = {};
             transfer[data.id] = {
-              dateCreated: data.dateCreated,
               transferType: model.appointments.type,
               transferDate: document.getElementById('pickupDate').value,
               transferFromUniversity: model.customer.university,
               transferFromDorm: model.customer.dormSelection,
               transferFromAddress: document.getElementById('addressStreet1').value + ' ' + document.getElementById('addressStreet2').value + ' ' + document.getElementById('addressCity').value + ' ' + document.getElementById('addressState').value + ' ' + document.getElementById('addressZip').value,
               transferToAddress: 'Storage',
-              transferStartTime: data.time,
-              transferEndTime: data.endTime,
               transferFee: 0,
-              transferLink: data.confirmationPage,
               completed: false
             };
             var transfersRef = firebase.database().ref("transfers/" + model.uid);
