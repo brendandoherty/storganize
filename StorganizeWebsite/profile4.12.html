@@ -4257,7 +4257,6 @@ a {
             <div class="col s12 m6">
               <ul id="toDoList" class="collection with-header">
                 <li class="collection-header"><h4>To Do</h4></li>
-                <li class="collection-item"><div>Add A Payment Method<a href="#!" id="notificationAddPayment" class="secondary-content"><i class="material-icons">send</i></a></div></li>
                 <li class="collection-item"><div>Request Free Boxes (optional)<a href="#!" id="notificationRequestBoxes" class="secondary-content"><i class="material-icons">send</i></a></div></li>
               </ul> 
           </div>   
@@ -4672,7 +4671,7 @@ a {
       <div id="creditCard" class="w3-hide w3-container collapsibleBody w3-animate-opacity" style="display: inline">
         
         <!-- Card Number -->
-        <div class="col m10 offset-m1">
+        <div id="creditCardForm" class="col m10 offset-m1" style="display: inline">
               <div class="card horizontal">
                 <div class="card-stacked">
                   <div class="card-content">
@@ -4742,13 +4741,30 @@ a {
                               Delete Card
                             </a>
                       </div>
-
                     </div>
                   </div>
                 </div>
               </div>
           </div>
         </div>
+        <!-- Add Payment Confirmed -->
+          <div id="addPaymentConfirmed" class="row" style="display: none;">
+            <div class="col m10 offset-m1">
+              <div class="card horizontal">
+                <div class="card-stacked">
+                  <div class="card-content">
+                    <div class="col s12 center">
+                      <div class="col s10 offset-s1 m6 offset-m3">
+                        <i class="large material-icons green accent-3" style="font-size: 150px;color: #00e676">done</i>
+                        <h3 style="margin-top: 0px;">Thanks! Your card has been added.</h3>
+                        <h6>You won't be charged until after we pick up your things for storage.</h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
       </div>
 
       <!-- End Credit Card -->
@@ -5104,7 +5120,9 @@ a {
 
       // For interaction with Firebase
       var model = {
-        customer: null,
+        customer: {
+          cardOnFile: false
+        },
         transfers: null,
         appointments: {
           type: null
@@ -5117,11 +5135,15 @@ a {
       function setupSchedulePickup() {
 
       // Notifications event listeners
-      document.getElementById('notificationSchedulePickup').addEventListener('click', displaySchedulePickup);
-      document.getElementById('notificationAddPayment').addEventListener('click', displayAddPayment);
-      document.getElementById('notificationRequestBoxes').addEventListener('click', displayRequestBoxes);
+        document.getElementById('notificationSchedulePickup').addEventListener('click', displaySchedulePickup);
+        document.getElementById('notificationRequestBoxes').addEventListener('click', displayRequestBoxes);
 
       };
+
+      function setupAddPayment() {
+        document.getElementById('notificationAddPayment').addEventListener('click', displayAddPayment);
+      }
+
 
       // Disable all days before today on calendar
       $('#pickupDate').pickadate({
@@ -5160,6 +5182,9 @@ a {
       $("#cardExpiryMonth").on('change', displayPaymentSubmitButton);
       $("#cardExpiryYear").on('change', displayPaymentSubmitButton);
 
+      // Event Listeners for submitting payment info
+      document.getElementById('submitPaymentForm').addEventListener('click', submitPaymentInfo);
+
       // Event Listeners for Account Information. Delete account and reset password. 
       document.getElementById('deleteAccountButton').addEventListener('click', deleteAccount);
       document.getElementById('resetPasswordButton').addEventListener('click', resetPassword);
@@ -5186,6 +5211,7 @@ a {
                   firebase.database().ref('/transfers/' + model.uid).once('value').then(function(snapshot) {
                     model.transfers = (snapshot.val());
                     seedToDoListPickup();
+                    seedToDoListPayment();
                   });
                 });
               });
@@ -5239,15 +5265,13 @@ a {
         myFunction('boxRequest')
       }
 
+// Notifications for Pickups
+
+
       function seedToDoListPickup() {
         if (model.transfers !== null) {
-          for (var transfer in model.transfers) {
-            if (!model.transfers[transfer].completed) {
               addEventSchedulePickup();
-            } else if (model.transfers[transfer].completed === true && model.transfers[transfer].transferType === 'Pickup') {
               addPastEventSchedulePickup();
-            }
-          } 
       } else {
             addToDoSchedulePickup();
             }
@@ -5278,52 +5302,79 @@ a {
       function addEventSchedulePickup() {
         var pickupDetails;
 
-        for (var transfer in model.transfers) {
-          var transferType = model.transfers[transfer].transferType;
-          var transferDate = model.transfers[transfer].transferDate;
-          var transferFromDorm = model.transfers[transfer].transferFromDorm;
-          var transferStartTime = model.transfers[transfer].transferStartTime;
-            if (!model.transfers[transfer].completed) {
-              pickupDetails = transferType + ' ' + 'scheduled for:' + ' ' + transferDate + ' ' + transferStartTime + ' ' + transferFromDorm
+          for (var transfer in model.transfers) {
+              if (!model.transfers[transfer].completed && model.transfers[transfer].transferType === 'Pickup') {
+                var transferType = model.transfers[transfer].transferType;
+                var transferDate = model.transfers[transfer].transferDate;
+                var transferFromDorm = model.transfers[transfer].transferFromDorm;
+                var transferStartTime = model.transfers[transfer].transferStartTime;
+
+                pickupDetails = transferType + ' ' + 'scheduled for:' + ' ' + transferDate + ' ' + transferStartTime + ' ' + transferFromDorm
+            }
           }
-        }
 
-        var li2 = document.createElement("li");
-        var t2 = document.createTextNode(pickupDetails);
-        li2.classList.add("collection-item")
-        li2.appendChild(t2);
+          var li2 = document.createElement("li");
+          var t2 = document.createTextNode(pickupDetails);
+          li2.classList.add("collection-item")
+          li2.appendChild(t2);
 
-        var link2 = document.createElement("A");
-        var text = document.createTextNode('change / cancel');
-        link2.appendChild(text);
-        link2.href = "#!";
-        link2.id = "changeSchedulePickup";
-        link2.className = "secondary-content";
-        li2.appendChild(link2);
+          var link2 = document.createElement("A");
+          var text = document.createTextNode('change / cancel');
+          link2.appendChild(text);
+          link2.href = "#!";
+          link2.id = "changeSchedulePickup";
+          link2.className = "secondary-content";
+          li2.appendChild(link2);
 
-        document.getElementById("upcomingEventsCalendar").appendChild(li2);
+          document.getElementById("upcomingEventsCalendar").appendChild(li2);
       }
 
       function addPastEventSchedulePickup() {
         var pickupDetails;
 
-        for (var transfer in model.transfers) {
-          var transferType = model.transfers[transfer].transferType;
-          var transferDate = model.transfers[transfer].transferDate;
-          var transferFromDorm = model.transfers[transfer].transferFromDorm;
-          var transferStartTime = model.transfers[transfer].transferStartTime;
-            if (model.transfers[transfer].completed) {
-              pickupDetails = transferType + ' ' + 'on:' + ' ' + transferDate + ' ' + transferStartTime + ' ' + transferFromDorm
+          for (var transfer in model.transfers) {
+              if (model.transfers[transfer].completed && model.transfers[transfer].transferType === 'Pickup') {
+                var transferType = model.transfers[transfer].transferType;
+                var transferDate = model.transfers[transfer].transferDate;
+                var transferFromDorm = model.transfers[transfer].transferFromDorm;
+                var transferStartTime = model.transfers[transfer].transferStartTime;
+
+                pickupDetails = transferType + ' ' + 'occurred on:' + ' ' + transferDate + ' ' + transferStartTime + ' ' + transferFromDorm
+            }
           }
-        }
 
-        var li2 = document.createElement("li");
-        var t2 = document.createTextNode(pickupDetails);
-        li2.classList.add("collection-item")
-        li2.appendChild(t2);
+          var li2 = document.createElement("li");
+          var t2 = document.createTextNode(pickupDetails);
+          li2.classList.add("collection-item")
+          li2.appendChild(t2);
 
-        document.getElementById("pastEventsCalendar").appendChild(li2);
+          document.getElementById("pastEventsCalendar").appendChild(li2);
       }
+// Notifications for Add a Payment Method
+
+    function seedToDoListPayment(){
+      if (!model.customer.cardOnFile) {
+        var li = document.createElement("li");
+        var t = document.createTextNode('Add a Payment Method');
+        li.classList.add("collection-item")
+        li.appendChild(t);
+
+        var link = document.createElement("A");
+        link.href = "#!";
+        link.id = "notificationAddPayment";
+        link.className = "secondary-content";
+        li.appendChild(link);
+
+        var icon = document.createElement("I");
+        var text = document.createTextNode('send');
+        icon.classList.add("material-icons")
+        icon.appendChild(text);
+        link.appendChild(icon);
+
+        document.getElementById("toDoList").appendChild(li);
+        setupAddPayment();
+      } else {console.log('no card on file or card already on file')}
+    }
 
 // Schedule a Pickup Logic
       function submitPickupForm() {
@@ -5463,6 +5514,20 @@ a {
             document.getElementById('submitBoxForm').classList.remove('disabled');
         };
     };
+
+// Payment form logic
+
+    function submitPaymentInfo() {
+      // Update the customer object in the database
+            var updateCust = {
+              cardOnFile: true
+            };
+            var custRef = firebase.database().ref("customers/" + model.uid);
+            custRef.update(updateCust);
+
+      document.getElementById('creditCardForm').style.display = 'none';
+      document.getElementById('addPaymentConfirmed').style.display = 'inline';
+    }
 
     function displayPaymentSubmitButton() {
         var cardNum = document.getElementById('cardNumber').value;
