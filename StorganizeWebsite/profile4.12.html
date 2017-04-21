@@ -4257,7 +4257,6 @@ a {
             <div class="col s12 m6">
               <ul id="toDoList" class="collection with-header">
                 <li class="collection-header"><h4>To Do</h4></li>
-                <li class="collection-item"><div>Request Free Boxes (optional)<a href="#!" id="notificationRequestBoxes" class="secondary-content"><i class="material-icons">send</i></a></div></li>
               </ul> 
           </div>   
           <div class="col s12 m6">
@@ -5136,12 +5135,39 @@ a {
 
       // Notifications event listeners
         document.getElementById('notificationSchedulePickup').addEventListener('click', displaySchedulePickup);
-        document.getElementById('notificationRequestBoxes').addEventListener('click', displayRequestBoxes);
-
       };
 
       function setupAddPayment() {
         document.getElementById('notificationAddPayment').addEventListener('click', displayAddPayment);
+      }
+
+      function setupRequestBoxes() {
+         document.getElementById('notificationRequestBoxes').addEventListener('click', displayRequestBoxes);
+      }
+
+      function seedModel() {
+        const user = firebase.auth().currentUser;
+        model.uid = user.uid;
+
+        firebase.database().ref('/roles/customers').once('value').then(function(snapshot) {
+
+            var loadCustomers = (snapshot.val());
+            console.log(loadCustomers.hasOwnProperty(user.uid));
+            if (loadCustomers.hasOwnProperty(user.uid)) {
+              firebase.database().ref('/customers/' + user.uid).once('value').then(function(snapshot) {
+                model.customer = (snapshot.val());
+                firebase.database().ref('/dorms/' + model.customer.university + 'Dorms/').once('value').then(function(snapshot) {
+                  model.dorms = (snapshot.val());
+                  firebase.database().ref('/transfers/' + model.uid).once('value').then(function(snapshot) {
+                    model.transfers = (snapshot.val());
+                    seedToDoListPickup();
+                    seedToDoListPayment();
+                    seedToDoListBoxes();
+                  });
+                });
+              });
+            }
+          });
       }
 
 
@@ -5210,8 +5236,7 @@ a {
                   model.dorms = (snapshot.val());
                   firebase.database().ref('/transfers/' + model.uid).once('value').then(function(snapshot) {
                     model.transfers = (snapshot.val());
-                    seedToDoListPickup();
-                    seedToDoListPayment();
+
                   });
                 });
               });
@@ -5310,23 +5335,23 @@ a {
                 var transferStartTime = model.transfers[transfer].transferStartTime;
 
                 pickupDetails = transferType + ' ' + 'scheduled for:' + ' ' + transferDate + ' ' + transferStartTime + ' ' + transferFromDorm
+
+                var li2 = document.createElement("li");
+                var t2 = document.createTextNode(pickupDetails);
+                li2.classList.add("collection-item")
+                li2.appendChild(t2);
+
+                var link2 = document.createElement("A");
+                var text = document.createTextNode('change / cancel');
+                link2.appendChild(text);
+                link2.href = "#!";
+                link2.id = "changeSchedulePickup";
+                link2.className = "secondary-content";
+                li2.appendChild(link2);
+
+                document.getElementById("upcomingEventsCalendar").appendChild(li2);
             }
           }
-
-          var li2 = document.createElement("li");
-          var t2 = document.createTextNode(pickupDetails);
-          li2.classList.add("collection-item")
-          li2.appendChild(t2);
-
-          var link2 = document.createElement("A");
-          var text = document.createTextNode('change / cancel');
-          link2.appendChild(text);
-          link2.href = "#!";
-          link2.id = "changeSchedulePickup";
-          link2.className = "secondary-content";
-          li2.appendChild(link2);
-
-          document.getElementById("upcomingEventsCalendar").appendChild(li2);
       }
 
       function addPastEventSchedulePickup() {
@@ -5340,15 +5365,97 @@ a {
                 var transferStartTime = model.transfers[transfer].transferStartTime;
 
                 pickupDetails = transferType + ' ' + 'occurred on:' + ' ' + transferDate + ' ' + transferStartTime + ' ' + transferFromDorm
+
+                var li2 = document.createElement("li");
+                var t2 = document.createTextNode(pickupDetails);
+                li2.classList.add("collection-item")
+                li2.appendChild(t2);
+
+                document.getElementById("pastEventsCalendar").appendChild(li2);
             }
           }
+      }
+// Notifications for Request Boxes
 
-          var li2 = document.createElement("li");
-          var t2 = document.createTextNode(pickupDetails);
-          li2.classList.add("collection-item")
-          li2.appendChild(t2);
+ function seedToDoListBoxes() {
+        if (model.transfers !== null) {
+              addEventScheduleBoxes();
+              addPastEventScheduleBoxes();
+      } else {
+            addToDoScheduleBoxes();
+            }
+    }
 
-          document.getElementById("pastEventsCalendar").appendChild(li2);
+      function addToDoScheduleBoxes() {
+        var li = document.createElement("li");
+        var t = document.createTextNode('Request Free Boxes (optional)');
+        li.classList.add("collection-item")
+        li.appendChild(t);
+
+        var link = document.createElement("A");
+        link.href = "#!";
+        link.id = "notificationRequestBoxes";
+        link.className = "secondary-content";
+        li.appendChild(link);
+
+        var icon = document.createElement("I");
+        var text = document.createTextNode('send');
+        icon.classList.add("material-icons")
+        icon.appendChild(text);
+        link.appendChild(icon);
+
+        document.getElementById("toDoList").appendChild(li);
+        setupRequestBoxes();
+    }
+
+      function addEventScheduleBoxes() {
+        var pickupDetails;
+
+          for (var transfer in model.transfers) {
+              if (!model.transfers[transfer].completed && model.transfers[transfer].transferType === 'Ship Boxes') {
+                var boxNumber = model.transfers[transfer].boxNumber;
+                var dateCreated = model.transfers[transfer].dateCreated;
+                var transferToDormAddress = model.transfers[transfer].transferToDormAddress;
+
+                pickupDetails = boxNumber + ' ' + 'order placed on:' + ' ' +  dateCreated + ' ' + 'to' + ' ' + transferToDormAddress
+
+                var li2 = document.createElement("li");
+                var t2 = document.createTextNode(pickupDetails);
+                li2.classList.add("collection-item")
+                li2.appendChild(t2);
+
+                var link2 = document.createElement("A");
+                var text = document.createTextNode('change / cancel');
+                link2.appendChild(text);
+                link2.href = "#!";
+                link2.id = "changeSchedulePickup";
+                link2.className = "secondary-content";
+                li2.appendChild(link2);
+
+                document.getElementById("upcomingEventsCalendar").appendChild(li2);
+            }
+          }
+      }
+
+      function addPastEventScheduleBoxes() {
+        var pickupDetails;
+
+          for (var transfer in model.transfers) {
+              if (model.transfers[transfer].completed && model.transfers[transfer].transferType === 'Ship Boxes') {
+                var boxNumber = model.transfers[transfer].boxNumber;
+                var dateCreated = model.transfers[transfer].dateCreated;
+                var transferToDormAddress = model.transfers[transfer].transferToDormAddress;
+
+                pickupDetails = boxNumber + ' ' + 'delivery completed to:' + ' ' + transferToDormAddress
+
+                var li2 = document.createElement("li");
+                var t2 = document.createTextNode(pickupDetails);
+                li2.classList.add("collection-item")
+                li2.appendChild(t2);
+
+                document.getElementById("pastEventsCalendar").appendChild(li2);
+            }
+          }
       }
 // Notifications for Add a Payment Method
 
@@ -6136,6 +6243,7 @@ a {
     $(document).ready(function(){
     // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     $('.modal').modal();
+    seedModel();
   });
     </script>
 
