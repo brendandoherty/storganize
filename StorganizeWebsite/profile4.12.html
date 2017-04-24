@@ -5145,6 +5145,8 @@ a {
          document.getElementById('notificationRequestBoxes').addEventListener('click', displayRequestBoxes);
       }
 
+      // Currently not using the below, seedModel code. Handled in authStateChanged
+
       function seedModel() {
         const user = firebase.auth().currentUser;
         model.uid = user.uid;
@@ -5236,7 +5238,9 @@ a {
                   model.dorms = (snapshot.val());
                   firebase.database().ref('/transfers/' + model.uid).once('value').then(function(snapshot) {
                     model.transfers = (snapshot.val());
-
+                    seedToDoListPickup();
+                    seedToDoListPayment();
+                    seedToDoListBoxes();
                   });
                 });
               });
@@ -5428,14 +5432,38 @@ a {
                 var text = document.createTextNode('change / cancel');
                 link2.appendChild(text);
                 link2.href = "#!";
-                link2.id = "changeSchedulePickup";
+                link2.id = "changeScheduleBoxShipment";
                 link2.className = "secondary-content";
                 li2.appendChild(link2);
 
                 document.getElementById("upcomingEventsCalendar").appendChild(li2);
-            }
+
+            } else if (!model.transfers[transfer].completed && model.transfers[transfer].transferType === 'Box Delivery') {
+                var boxNumber = model.transfers[transfer].boxNumber;
+                var transferType = model.transfers[transfer].transferType;
+                var transferDate = model.transfers[transfer].transferDate;
+                var transferStartTime = model.transfers[transfer].transferStartTime;
+                var transferToDormAddress = model.transfers[transfer].transferToDormAddress;
+
+                pickupDetails = transferType + ' ' + 'scheduled for:' + ' ' +  transferDate + ' ' + 'at '+ transferStartTime + ' ' + 'to' + ' ' + transferToDormAddress + ' (' + boxNumber + ')' 
+
+                var li2 = document.createElement("li");
+                var t2 = document.createTextNode(pickupDetails);
+                li2.classList.add("collection-item")
+                li2.appendChild(t2);
+
+                var link2 = document.createElement("A");
+                var text = document.createTextNode('change / cancel');
+                link2.appendChild(text);
+                link2.href = "#!";
+                link2.id = "changeScheduleBoxDelivery";
+                link2.className = "secondary-content";
+                li2.appendChild(link2);
+
+                document.getElementById("upcomingEventsCalendar").appendChild(li2)
           }
       }
+    }
 
       function addPastEventScheduleBoxes() {
         var pickupDetails;
@@ -5454,8 +5482,24 @@ a {
                 li2.appendChild(t2);
 
                 document.getElementById("pastEventsCalendar").appendChild(li2);
-            }
+
+            } else if (model.transfers[transfer].completed && model.transfers[transfer].transferType === 'Box Delivery') {
+                var boxNumber = model.transfers[transfer].boxNumber;
+                var transferType = model.transfers[transfer].transferType;
+                var transferDate = model.transfers[transfer].transferDate;
+                var transferStartTime = model.transfers[transfer].transferStartTime;
+                var transferToDormAddress = model.transfers[transfer].transferToDormAddress;
+
+                pickupDetails = transferType + ' ' + 'completed on:' + ' ' +  transferDate + ' ' + 'at '+ transferStartTime + ' ' + 'to' + ' ' + transferToDormAddress + ' (' + boxNumber + ')' 
+
+                var li2 = document.createElement("li");
+                var t2 = document.createTextNode(pickupDetails);
+                li2.classList.add("collection-item")
+                li2.appendChild(t2);
+
+                document.getElementById("pastEventsCalendar").appendChild(li2)
           }
+        }
       }
 // Notifications for Add a Payment Method
 
@@ -6243,7 +6287,6 @@ a {
     $(document).ready(function(){
     // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     $('.modal').modal();
-    seedModel();
   });
     </script>
 
