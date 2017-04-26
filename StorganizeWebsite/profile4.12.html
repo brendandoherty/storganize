@@ -4243,7 +4243,6 @@ a {
 
     <div id="unathenticated" style="display: none;">
       <h5>You need to be a Storganize customer in order to log in. Please <a href="https://www.storganize.io/signupsummer2017">sign up</a> first.</h5>
-      <a class="waves-effect waves-light btn-large" id="testUpload" style="background-color: #ff8b38; margin-top:30px:">Test</a>
     </div>
 
     <div id="profile" class="collapsible" style="display: inline;">
@@ -5131,9 +5130,9 @@ a {
         uid: null
       }
 
-      function setupSchedulePickup() {
-
       // Notifications event listeners
+
+      function setupSchedulePickup() {
         document.getElementById('notificationSchedulePickup').addEventListener('click', displaySchedulePickup);
       };
 
@@ -5144,34 +5143,6 @@ a {
       function setupRequestBoxes() {
          document.getElementById('notificationRequestBoxes').addEventListener('click', displayRequestBoxes);
       }
-
-      // Currently not using the below, seedModel code. Handled in authStateChanged
-
-      function seedModel() {
-        const user = firebase.auth().currentUser;
-        model.uid = user.uid;
-
-        firebase.database().ref('/roles/customers').once('value').then(function(snapshot) {
-
-            var loadCustomers = (snapshot.val());
-            console.log(loadCustomers.hasOwnProperty(user.uid));
-            if (loadCustomers.hasOwnProperty(user.uid)) {
-              firebase.database().ref('/customers/' + user.uid).once('value').then(function(snapshot) {
-                model.customer = (snapshot.val());
-                firebase.database().ref('/dorms/' + model.customer.university + 'Dorms/').once('value').then(function(snapshot) {
-                  model.dorms = (snapshot.val());
-                  firebase.database().ref('/transfers/' + model.uid).once('value').then(function(snapshot) {
-                    model.transfers = (snapshot.val());
-                    seedToDoListPickup();
-                    seedToDoListPayment();
-                    seedToDoListBoxes();
-                  });
-                });
-              });
-            }
-          });
-      }
-
 
       // Disable all days before today on calendar
       $('#pickupDate').pickadate({
@@ -5242,6 +5213,30 @@ a {
                     seedToDoListPayment();
                     seedToDoListBoxes();
                   });
+
+                    // Disable all days we are not at various universities
+                  if (model.customer.university === 'au') {
+                    $('#pickupDate').pickadate({
+                      min: [2017,3,22],
+                      max: [2017,5,15]
+                    });
+                  } else if (model.customer.university === 'cnu') {
+                    $('#pickupDate').pickadate({
+                      min: [2017,3,24],
+                      max: [2017,4,2]
+                    });
+                  } else if (model.customer.university === 'odu') {
+                    $('#pickupDate').pickadate({
+                      min: [2017,3,25],
+                      max: [2017,4,5]
+                    });
+                  } else {
+                    $('#pickupDate').pickadate({
+                      min: [2017,4,12],
+                      max: [2017,5,15]
+                    });
+                  }
+
                 });
               });
               document.getElementById('profile').style.display = 'inline';
@@ -5300,7 +5295,6 @@ a {
       function seedToDoListPickup() {
         if (model.transfers !== null) {
               addEventSchedulePickup();
-              addPastEventSchedulePickup();
       } else {
             addToDoSchedulePickup();
             }
@@ -5332,59 +5326,101 @@ a {
         var pickupDetails;
 
           for (var transfer in model.transfers) {
+            // If the model contains a transfer labeled "Pickup" that has not been completed, add it to the Upcoming Events List
               if (!model.transfers[transfer].completed && model.transfers[transfer].transferType === 'Pickup') {
-                var transferType = model.transfers[transfer].transferType;
-                var transferDate = model.transfers[transfer].transferDate;
-                var transferFromDorm = model.transfers[transfer].transferFromDorm;
-                var transferStartTime = model.transfers[transfer].transferStartTime;
+                // If the transfer is coming from an address (Apartment or Home), use the address in the notification
+                if (model.transfers[transfer].transferFromDorm === '') {
+                  var transferType = model.transfers[transfer].transferType;
+                  var transferDate = model.transfers[transfer].transferDate;
+                  var transferFromAddress = model.transfers[transfer].transferFromAddress;
+                  var transferStartTime = model.transfers[transfer].transferStartTime;
 
-                pickupDetails = transferType + ' ' + 'scheduled for:' + ' ' + transferDate + ' ' + transferStartTime + ' ' + transferFromDorm
+                  pickupDetails = transferType + ' ' + 'scheduled for:' + ' ' + transferDate + ' ' + transferStartTime + ' ' + transferFromAddress
 
-                var li2 = document.createElement("li");
-                var t2 = document.createTextNode(pickupDetails);
-                li2.classList.add("collection-item")
-                li2.appendChild(t2);
+                  var li2 = document.createElement("li");
+                  var t2 = document.createTextNode(pickupDetails);
+                  li2.classList.add("collection-item")
+                  li2.appendChild(t2);
 
-                var link2 = document.createElement("A");
-                var text = document.createTextNode('change / cancel');
-                link2.appendChild(text);
-                link2.href = "#!";
-                link2.id = "changeSchedulePickup";
-                link2.className = "secondary-content";
-                li2.appendChild(link2);
+                  var link2 = document.createElement("A");
+                  var text = document.createTextNode('change / cancel');
+                  link2.appendChild(text);
+                  link2.href = "#!";
+                  link2.id = "changeSchedulePickup";
+                  link2.className = "secondary-content";
+                  li2.appendChild(link2);
 
-                document.getElementById("upcomingEventsCalendar").appendChild(li2);
-            }
-          }
-      }
+                  document.getElementById("upcomingEventsCalendar").appendChild(li2);
 
-      function addPastEventSchedulePickup() {
-        var pickupDetails;
+                } 
+                // If the transfer is coming from a Dorm, use the Dorm Name in the notification
+                else {
+                  var transferType = model.transfers[transfer].transferType;
+                  var transferDate = model.transfers[transfer].transferDate;
+                  var transferFromDorm = model.transfers[transfer].transferFromDorm;
+                  var transferStartTime = model.transfers[transfer].transferStartTime;
 
-          for (var transfer in model.transfers) {
-              if (model.transfers[transfer].completed && model.transfers[transfer].transferType === 'Pickup') {
-                var transferType = model.transfers[transfer].transferType;
-                var transferDate = model.transfers[transfer].transferDate;
-                var transferFromDorm = model.transfers[transfer].transferFromDorm;
-                var transferStartTime = model.transfers[transfer].transferStartTime;
+                  pickupDetails = transferType + ' ' + 'scheduled for:' + ' ' + transferDate + ' ' + transferStartTime + ' ' + transferFromDorm
 
-                pickupDetails = transferType + ' ' + 'occurred on:' + ' ' + transferDate + ' ' + transferStartTime + ' ' + transferFromDorm
+                  var li2 = document.createElement("li");
+                  var t2 = document.createTextNode(pickupDetails);
+                  li2.classList.add("collection-item")
+                  li2.appendChild(t2);
 
-                var li2 = document.createElement("li");
-                var t2 = document.createTextNode(pickupDetails);
-                li2.classList.add("collection-item")
-                li2.appendChild(t2);
+                  var link2 = document.createElement("A");
+                  var text = document.createTextNode('change / cancel');
+                  link2.appendChild(text);
+                  link2.href = "#!";
+                  link2.id = "changeSchedulePickup";
+                  link2.className = "secondary-content";
+                  li2.appendChild(link2);
 
-                document.getElementById("pastEventsCalendar").appendChild(li2);
-            }
-          }
-      }
+                  document.getElementById("upcomingEventsCalendar").appendChild(li2);
+                }
+            } 
+           // If the model contains a transfer labeled "Pickup" that HAS been completed, add it to the Past Events List
+              else if (model.transfers[transfer].completed && model.transfers[transfer].transferType === 'Pickup') {
+                // If the transfer is coming from an address (Apartment or Home), use the address in the notification
+                if (model.transfers[transfer].transferFromDorm === '') {
+                  var transferType = model.transfers[transfer].transferType;
+                  var transferDate = model.transfers[transfer].transferDate;
+                  var transferFromAddress = model.transfers[transfer].transferFromAddress;
+                  var transferStartTime = model.transfers[transfer].transferStartTime;
+
+                    pickupDetails = transferType + ' ' + 'occurred on:' + ' ' + transferDate + ' ' + transferStartTime + ' ' + transferFromAddress
+
+                    var li2 = document.createElement("li");
+                    var t2 = document.createTextNode(pickupDetails);
+                    li2.classList.add("collection-item")
+                    li2.appendChild(t2);
+
+                    document.getElementById("pastEventsCalendar").appendChild(li2);
+                } 
+                else {
+                  var transferType = model.transfers[transfer].transferType;
+                  var transferDate = model.transfers[transfer].transferDate;
+                  var transferFromDorm = model.transfers[transfer].transferFromDorm;
+                  var transferStartTime = model.transfers[transfer].transferStartTime;
+
+                  pickupDetails = transferType + ' ' + 'occurred on:' + ' ' + transferDate + ' ' + transferStartTime + ' ' + transferFromDorm
+
+                    var li2 = document.createElement("li");
+                    var t2 = document.createTextNode(pickupDetails);
+                    li2.classList.add("collection-item")
+                    li2.appendChild(t2);
+
+                    document.getElementById("pastEventsCalendar").appendChild(li2);
+                }
+              } 
+        }
+      };
+
+
 // Notifications for Request Boxes
 
  function seedToDoListBoxes() {
         if (model.transfers !== null) {
               addEventScheduleBoxes();
-              addPastEventScheduleBoxes();
       } else {
             addToDoScheduleBoxes();
             }
@@ -5416,91 +5452,95 @@ a {
         var pickupDetails;
 
           for (var transfer in model.transfers) {
-              if (!model.transfers[transfer].completed && model.transfers[transfer].transferType === 'Ship Boxes') {
-                var boxNumber = model.transfers[transfer].boxNumber;
-                var dateCreated = model.transfers[transfer].dateCreated;
-                var transferToDormAddress = model.transfers[transfer].transferToDormAddress;
+             // If the model contains a transfer labeled "Ship Boxes" that has not been completed, add it to the Upcoming Events List
+              if ((!model.transfers[transfer].completed) && (model.transfers[transfer].transferType === 'Ship Boxes')) {
+                // If the transfer is coming from an address (Apartment or Home), use the address in the notification
+                if (model.transfers[transfer].transferFromDorm === '') {
+                  var boxNumber = model.transfers[transfer].boxNumber;
+                  var dateCreated = model.transfers[transfer].dateCreated;
+                  var transferToAptAddress = model.transfers[transfer].transferToAptAddress;
 
-                pickupDetails = boxNumber + ' ' + 'order placed on:' + ' ' +  dateCreated + ' ' + 'to' + ' ' + transferToDormAddress
+                  pickupDetails = boxNumber + ' ' + 'order placed on:' + ' ' +  dateCreated + ' ' + 'to' + ' ' + transferToAptAddress
 
-                var li2 = document.createElement("li");
-                var t2 = document.createTextNode(pickupDetails);
-                li2.classList.add("collection-item")
-                li2.appendChild(t2);
+                  var li2 = document.createElement("li");
+                  var t2 = document.createTextNode(pickupDetails);
+                  li2.classList.add("collection-item")
+                  li2.appendChild(t2);
 
-                var link2 = document.createElement("A");
-                var text = document.createTextNode('change / cancel');
-                link2.appendChild(text);
-                link2.href = "#!";
-                link2.id = "changeScheduleBoxShipment";
-                link2.className = "secondary-content";
-                li2.appendChild(link2);
+                  var link2 = document.createElement("A");
+                  var text = document.createTextNode('change / cancel');
+                  link2.appendChild(text);
+                  link2.href = "#!";
+                  link2.id = "changeScheduleBoxShipment";
+                  link2.className = "secondary-content";
+                  li2.appendChild(link2);
 
-                document.getElementById("upcomingEventsCalendar").appendChild(li2);
+                  document.getElementById("upcomingEventsCalendar").appendChild(li2)
+              }
+                // If the transfer is coming from a Dorm, use the Dorm Name in the notification
+                else {
+                  var boxNumber = model.transfers[transfer].boxNumber;
+                  var dateCreated = model.transfers[transfer].dateCreated;
+                  var transferToDormAddress = model.transfers[transfer].transferToDormAddress;
 
-            } else if (!model.transfers[transfer].completed && model.transfers[transfer].transferType === 'Box Delivery') {
-                var boxNumber = model.transfers[transfer].boxNumber;
-                var transferType = model.transfers[transfer].transferType;
-                var transferDate = model.transfers[transfer].transferDate;
-                var transferStartTime = model.transfers[transfer].transferStartTime;
-                var transferToDormAddress = model.transfers[transfer].transferToDormAddress;
+                  pickupDetails = boxNumber + ' ' + 'order placed on:' + ' ' +  dateCreated + ' ' + 'to' + ' ' + transferToDormAddress
 
-                pickupDetails = transferType + ' ' + 'scheduled for:' + ' ' +  transferDate + ' ' + 'at '+ transferStartTime + ' ' + 'to' + ' ' + transferToDormAddress + ' (' + boxNumber + ')' 
+                  var li2 = document.createElement("li");
+                  var t2 = document.createTextNode(pickupDetails);
+                  li2.classList.add("collection-item")
+                  li2.appendChild(t2);
 
-                var li2 = document.createElement("li");
-                var t2 = document.createTextNode(pickupDetails);
-                li2.classList.add("collection-item")
-                li2.appendChild(t2);
+                  var link2 = document.createElement("A");
+                  var text = document.createTextNode('change / cancel');
+                  link2.appendChild(text);
+                  link2.href = "#!";
+                  link2.id = "changeScheduleBoxShipment";
+                  link2.className = "secondary-content";
+                  li2.appendChild(link2);
 
-                var link2 = document.createElement("A");
-                var text = document.createTextNode('change / cancel');
-                link2.appendChild(text);
-                link2.href = "#!";
-                link2.id = "changeScheduleBoxDelivery";
-                link2.className = "secondary-content";
-                li2.appendChild(link2);
+                  document.getElementById("upcomingEventsCalendar").appendChild(li2)
+                }
+            } 
+            // If the model contains a transfer labeled "Ship Boxes" that HAS been completed, add it to the Past Events List
+             else if (model.transfers[transfer].completed && model.transfers[transfer].transferType === 'Ship Boxes') {
+                // If the transfer is coming from an address (Apartment or Home), use the address in the notification
+                if (model.transfers[transfer].transferFromDorm === '') {
+                  var boxNumber = model.transfers[transfer].boxNumber;
+                  var dateCreated = model.transfers[transfer].dateCreated;
+                  var transferToAptAddress = model.transfers[transfer].transferToAptAddress;
 
-                document.getElementById("upcomingEventsCalendar").appendChild(li2)
-          }
+                  pickupDetails = boxNumber + ' ' + 'delivery completed to:' + ' ' + transferToAptAddress
+
+                  var li2 = document.createElement("li");
+                  var t2 = document.createTextNode(pickupDetails);
+                  li2.classList.add("collection-item")
+                  li2.appendChild(t2);
+
+                  document.getElementById("pastEventsCalendar").appendChild(li2);
+              }
+                // If the transfer is coming from a Dorm, use the Dorm Name in the notification
+                else {
+                  var boxNumber = model.transfers[transfer].boxNumber;
+                  var dateCreated = model.transfers[transfer].dateCreated;
+                  var transferToDormAddress = model.transfers[transfer].transferToDormAddress;
+
+                  pickupDetails = boxNumber + ' ' + 'delivery completed to:' + ' ' + transferToDormAddress
+
+                  var li2 = document.createElement("li");
+                  var t2 = document.createTextNode(pickupDetails);
+                  li2.classList.add("collection-item")
+                  li2.appendChild(t2);
+
+                  document.getElementById("pastEventsCalendar").appendChild(li2);
+                }
+              }
+              // If there is no transfer labeled "Ship Boxes" in the model, add To Do: Request Boxes to the To Do List
+              else {
+                addToDoScheduleBoxes();
+              }
       }
-    }
+    };
 
-      function addPastEventScheduleBoxes() {
-        var pickupDetails;
-
-          for (var transfer in model.transfers) {
-              if (model.transfers[transfer].completed && model.transfers[transfer].transferType === 'Ship Boxes') {
-                var boxNumber = model.transfers[transfer].boxNumber;
-                var dateCreated = model.transfers[transfer].dateCreated;
-                var transferToDormAddress = model.transfers[transfer].transferToDormAddress;
-
-                pickupDetails = boxNumber + ' ' + 'delivery completed to:' + ' ' + transferToDormAddress
-
-                var li2 = document.createElement("li");
-                var t2 = document.createTextNode(pickupDetails);
-                li2.classList.add("collection-item")
-                li2.appendChild(t2);
-
-                document.getElementById("pastEventsCalendar").appendChild(li2);
-
-            } else if (model.transfers[transfer].completed && model.transfers[transfer].transferType === 'Box Delivery') {
-                var boxNumber = model.transfers[transfer].boxNumber;
-                var transferType = model.transfers[transfer].transferType;
-                var transferDate = model.transfers[transfer].transferDate;
-                var transferStartTime = model.transfers[transfer].transferStartTime;
-                var transferToDormAddress = model.transfers[transfer].transferToDormAddress;
-
-                pickupDetails = transferType + ' ' + 'completed on:' + ' ' +  transferDate + ' ' + 'at '+ transferStartTime + ' ' + 'to' + ' ' + transferToDormAddress + ' (' + boxNumber + ')' 
-
-                var li2 = document.createElement("li");
-                var t2 = document.createTextNode(pickupDetails);
-                li2.classList.add("collection-item")
-                li2.appendChild(t2);
-
-                document.getElementById("pastEventsCalendar").appendChild(li2)
-          }
-        }
-      }
 // Notifications for Add a Payment Method
 
     function seedToDoListPayment(){
@@ -5602,13 +5642,17 @@ a {
 
             var transfer = {};
             transfer[data.id] = {
+              //dateCreated: data.dateCreated,
               transferType: model.appointments.type,
               transferDate: document.getElementById('pickupDate').value,
               transferFromUniversity: model.customer.university,
               transferFromDorm: model.customer.dormSelection,
               transferFromAddress: document.getElementById('addressStreet1').value + ' ' + document.getElementById('addressStreet2').value + ' ' + document.getElementById('addressCity').value + ' ' + document.getElementById('addressState').value + ' ' + document.getElementById('addressZip').value,
               transferToAddress: 'Storage',
+              //transferStartTime: data.time,
+              //transferEndTime: data.endTime,
               transferFee: 0,
+              //transferLink: data.confirmationPage,
               completed: false
             };
             var transfersRef = firebase.database().ref("transfers/" + model.uid);
@@ -5667,6 +5711,8 @@ a {
     };
 
 // Payment form logic
+
+//TO DO: Update this to send to stripe
 
     function submitPaymentInfo() {
       // Update the customer object in the database
