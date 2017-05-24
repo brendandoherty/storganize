@@ -5340,15 +5340,7 @@ a {
           type: null
         },
         dorms: null,
-        images: {
-          one: "https://static1.squarespace.com/static/54f739b1e4b016a7c95a390f/t/5925bff49de4bbde0f4dddce/1495646209895/IMG_0587.png",
-          two: 'https://static1.squarespace.com/static/54f739b1e4b016a7c95a390f/t/5925da96ebbd1a9fc74c91e2/1495653027204/IMG_0586.png',
-          three: 'https://static1.squarespace.com/static/54f739b1e4b016a7c95a390f/t/5925da96ebbd1a9fc74c91e2/1495653027204/IMG_0586.png',
-          four: 'https://static1.squarespace.com/static/54f739b1e4b016a7c95a390f/t/5925da96ebbd1a9fc74c91e2/1495653027204/IMG_0586.png',
-          five: 'https://static1.squarespace.com/static/54f739b1e4b016a7c95a390f/t/5925da96ebbd1a9fc74c91e2/1495653027204/IMG_0586.png',
-          six: 'https://static1.squarespace.com/static/54f739b1e4b016a7c95a390f/t/5925da96ebbd1a9fc74c91e2/1495653027204/IMG_0586.png',
-          seven: 'https://static1.squarespace.com/static/54f739b1e4b016a7c95a390f/t/5925da96ebbd1a9fc74c91e2/1495653027204/IMG_0586.png'
-        },
+        images: null,
         date: null,
         uid: null
       }
@@ -5417,53 +5409,40 @@ a {
 
       function handleAuthStateChange() {
         const user = firebase.auth().currentUser;
-        model.uid = user.uid;
 
         if (user) {
+          model.uid = user.uid;
 
           firebase.database().ref('/roles/customers').once('value').then(function(snapshot) {
 
             var loadCustomers = (snapshot.val());
             console.log(loadCustomers.hasOwnProperty(user.uid));
+
             if (loadCustomers.hasOwnProperty(user.uid)) {
+
               firebase.database().ref('/customers/' + user.uid).once('value').then(function(snapshot) {
                 model.customer = (snapshot.val());
+
                 firebase.database().ref('/dorms/' + model.customer.university + 'Dorms/').once('value').then(function(snapshot) {
                   model.dorms = (snapshot.val());
+
                   firebase.database().ref('/transfers/' + model.uid).once('value').then(function(snapshot) {
                     model.transfers = (snapshot.val());
                     seedToDoListPickup();
                     seedToDoListPayment();
                     seedToDoListBoxes();
-                  });
 
-                    // Disable all days we are not at various universities
-                  if (model.customer.university === 'au') {
-                    $('#pickupDate').pickadate({
-                      min: [2017,3,22],
-                      max: [2017,5,15]
-                    });
-                  } else if (model.customer.university === 'cnu') {
-                    $('#pickupDate').pickadate({
-                      min: [2017,3,24],
-                      max: [2017,4,2]
-                    });
-                  } else if (model.customer.university === 'odu') {
-                    $('#pickupDate').pickadate({
-                      min: [2017,3,25],
-                      max: [2017,4,5]
-                    });
-                  } else {
-                    $('#pickupDate').pickadate({
-                      min: [2017,4,12],
-                      max: [2017,5,15]
-                    });
-                  }
+                    firebase.database().ref('/images/' + user.uid).once('value').then(function(snapshot) {
+                      model.images = (snapshot.val());
+                      console.log(model.images)
+                      displayImages();
+                    });  
+                  });
 
                 });
               });
-              document.getElementById('profile').style.display = 'inline';
-              document.getElementById('checkingAuth').style.display = 'none';
+                document.getElementById('profile').style.display = 'inline';
+                document.getElementById('checkingAuth').style.display = 'none';
             }
           });
 
@@ -5476,7 +5455,7 @@ a {
           document.getElementById('unathenticated').style.display = 'inline';
           document.getElementById('checkingAuth').style.display = 'none';
         }
-      }
+      };
 
       function handleSignout() {
         event.preventDefault();
@@ -6596,7 +6575,6 @@ a {
     // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     $('.modal').modal();
     $('.materialboxed').materialbox();
-    displayImages();
   });
     </script>
 
