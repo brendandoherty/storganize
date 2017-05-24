@@ -4707,42 +4707,42 @@ a {
                   </div>
                 </div>
               </div>
-          </div>
+        </div>
           <!-- Display cards already on file -->
-          <div id="displayCustCardsOnFile" style="display: inline">
-            <div class="col m10 offset-m1">
-              <div class="card horizontal">
-                <div class="card-stacked">
-                  <div class="card-content">
-                    <div class="col s12 center">
-                      <h4>Card on File</h4>
-                      <div class="row">
-                          <table class="striped centered col s12" id="displayCustCardsOnFileTable">
-                            <thead>
-                              <tr>
-                                <th>Card Type:</th>
-                                <th>Last 4 Digits:</th>
-                                <th>Total Charged to Card:</th>
-                              </tr>
-                            </thead>
-                            <tbody>   
-                              <tr>
-                                <th>{{custPaymentInfo.ccBrand}}</th>
-                                <th>{{custPaymentInfo.ccLast4}}</th>
-                                <th>${{custPaymentInfo.totalCharged}}</th>
-                              </tr>
-                            </tbody>
-                          </table>
-                      </div>
-                      <div class="row">
-                            <a class="waves-effect waves-light btn-small col s4 offset-s4" id="deleteCard" style="background-color: #ff8b38">
-                              Delete Card
-                            </a>
-                      </div>
+        <div id="displayCustCardsOnFile" style="display: inline">
+          <div class="col m10 offset-m1">
+            <div class="card horizontal">
+              <div class="card-stacked">
+                <div class="card-content">
+                  <div class="col s12 center">
+                    <h4>Card on File</h4>
+                    <div class="row">
+                        <table class="striped centered col s12" id="displayCustCardsOnFileTable">
+                          <thead>
+                            <tr>
+                              <th>Card Type:</th>
+                              <th>Last 4 Digits:</th>
+                              <th>Total Charged to Card:</th>
+                            </tr>
+                          </thead>
+                          <tbody>   
+                            <tr>
+                              <th>{{custPaymentInfo.ccBrand}}</th>
+                              <th>{{custPaymentInfo.ccLast4}}</th>
+                              <th>${{custPaymentInfo.totalCharged}}</th>
+                            </tr>
+                          </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                          <a class="waves-effect waves-light btn-small col s4 offset-s4" id="deleteCard" style="background-color: #ff8b38">
+                            Delete Card
+                          </a>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
           </div>
         </div>
         <!-- Add Payment Confirmed -->
@@ -4769,11 +4769,221 @@ a {
 
       <!-- Box Drop Off Request -->
       <button id="boxRequestButton" onclick="myFunction('boxRequest')" class="w3-button w3-block w3-left-align collapsibleHeader"><i class="material-icons icons">perm_identity</i>Request Free Boxes (Optional)</button>
+
       <div id="boxRequest" class="w3-hide w3-container collapsibleBody w3-animate-opacity" style="display: inline;"> 
+      <h1>TEST</h1>
+
         <div id="boxDeliveryRequest" style="display: none;">
-          <iframe src="https://app.acuityscheduling.com/schedule.php?owner=11393255&appointmentType=1199172" width="100%" height="800" frameBorder="0"></iframe>
-          <script src="https://d3gxy7nm8y4yjr.cloudfront.net/js/embed.js" type="text/javascript"></script>
+          <div id="boxDeliveryRequestForm" class="row center">
+            <div class="col m10 offset-m1">
+              <div class="card horizontal">
+                <div class="card-stacked">
+                  <div class="card-content">
+                    <div class="col s12 center">
+                    <div class="row">
+                        <h4>Step 1: Select a Date and Time For Us to Deliver Your Boxes To You</h4>
+                      </div>
+                      <div class="row">
+                        <div class="col m6 s12">
+                          <i class="material-icons" style="font-size: 72px;color: #ff8b38;">today</i>
+                          <h6>Select Pickup Date</h6>
+                          <input id="boxDeliveryPickupDate" type="date" class="datepicker col m8 offset-m2 s10 offset-s1 center">
+                        </div>
+                        <div class="col m6 s12">
+                          <i class="material-icons" style="font-size: 72px;color: #ff8b38;">schedule</i>
+                          <h6>Select Pickup Time</h6>
+                          <div class="progress col m8 offset-m2 s10 offset-s1 center" id="boxDeliveryLoadingPickup" style="display: none;">
+                              <div class="indeterminate"></div>
+                          </div>
+                          <div class="input-field">
+                            <select id="boxDeliveryPickupTime" class="browser-default col m8 offset-m2 s10 offset-s1 center" style="border: initial;border-bottom: 1px solid #9e9e9e">
+                              <option value="" disabled selected>Pickup Time</option>
+                            </select>
+                          </div>
+                          <div class="row">
+                            <div id="boxDeliveryPickupTimeErrorMessage" class="row col s10 offset-s1 m8 offset-m2 center" style="display: none;margin-top: 15px; margin-bottom: 0px; border: solid 1px green; "><p>Please select a pickup date before selecting a pickup time.</p></div>
+                          </div>
+                      <div class="row">
+                        <h4>How many boxes would you like?</h4>
+                      </div>
+                      <div class="row">
+                      <div class="col s2 m2"> 
+                      </div>
+                        <div class="input-field">
+                          <select id="boxDeliveryBoxNumber" class="input-field col s12 m4 offset-m2 browser-default">
+                            <option value="" disabled selected></option>
+                              <option value="5 boxes">5 boxes</option>
+                              <option value="10 boxes">10 boxes</option>
+                              <option value="15 boxes">15 boxes</option>
+                              <option value="20 boxes">20 boxes</option>
+                          </select>
+                        </div>
+                      <div class="col s2 m2"> 
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+
+            <div class="col m10 offset-m1">
+              <div class="card horizontal">
+                <div class="card-stacked">
+                  <div class="card-content">
+                    <div class="col s12 center">
+                      <h4>Step 2: Please Confirm Your Address</h4>
+
+                      <div class="row">
+                        <div class="input-field col s12 m6">
+                          <i class="material-icons prefix">account_circle</i>
+                          <input id="boxDeliveryFirstName" type="text" class="validate">
+                          <label for="boxDeliveryFirstName">First Name</label>
+                        </div>
+                        <div class="input-field col s12 m6">
+                          <i class="material-icons prefix">account_circle</i>
+                          <input id="boxDeliveryLastName" type="text" class="validate">
+                          <label for="boxDeliveryLastName">Last Name</label>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="input-field col s12 m6">
+                          <i class="material-icons prefix">phone</i>
+                          <input id="boxDeliveryPhoneNumber" type="text" class="validate">
+                          <label for="boxDeliveryPhoneNumber">Mobile Number</label>
+                        </div>
+                        <div class="input-field col s12 m6">
+                          <i class="material-icons prefix">email</i>
+                          <input id="boxDeliveryEmail" type="text" class="validate">
+                          <label for="boxDeliveryEmail">Confirmation Email</label>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <h6 class="col s12">Do you live in a dorm, apartment, or house?</h6>
+                        <div class="input-field">
+                          <select id="boxDeliveryHousingType" class="browser-default col s12 m6 offset-m3" style="border: initial;">
+                            <option value="" disabled selected>Choose your option</option>
+                            <option value="dorm">Dorm</option>
+                            <option value="apartment">Apartment</option>
+                            <option value="house">House</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div id="boxDeliveryHousingTypeDorm" class="row" style="display: none;">
+                        <h6 class="col s12">Which Dorm?</h6>
+                        <div class="input-field">
+                          <select id="boxDeliveryDormSelection" class="browser-default col s12 m6 offset-m3" style="border: initial;">
+                            <option value="" disabled selected>Choose your option</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div id="boxDeliveryHousingTypeApt" class="row" style="display: none">
+                        <div class="input-field col s12 m8 offset-m2">
+                          <input id="boxDeliveryAddressStreet1" type="text" class="validate">
+                          <label for="boxDeliveryAddressStreet1">Address Line 1</label>
+                        </div>
+                        <div class="input-field col s12 m8 offset-m2">
+                          <input id="boxDeliveryAddressStreet2" type="text" class="validate">
+                          <label for="boxDeliveryAddressStreet2">Address Line 2</label>
+                        </div>
+                        <div class="input-field col s12 m3 offset-m2">
+                          <input id="boxDeliveryAddressCity" type="text" class="validate">
+                          <label for="boxDeliveryAddressCity">City</label>
+                        </div>
+                        <div class="input-field">
+                          <select id="boxDeliveryAddressState" class="input-field col s12 m2 browser-default">
+                            <option value="" disabled selected>State</option>
+                              <option value="AL">AL</option>
+                              <option value="AK">AK</option>
+                              <option value="AZ">AZ</option>
+                              <option value="AR">AR</option>
+                              <option value="CA">CA</option>
+                              <option value="CO">CO</option>
+                              <option value="CT">CT</option>
+                              <option value="DE">DE</option>
+                              <option value="DC">DC</option>
+                              <option value="FL">FL</option>
+                              <option value="GA">GA</option>
+                              <option value="HI">HI</option>
+                              <option value="ID">ID</option>
+                              <option value="IL">IL</option>
+                              <option value="IN">IN</option>
+                              <option value="IA">IA</option>
+                              <option value="KS">KS</option>
+                              <option value="KY">KY</option>
+                              <option value="LA">LA</option>
+                              <option value="ME">ME</option>
+                              <option value="MD">MD</option>
+                              <option value="MA">MA</option>
+                              <option value="MI">MI</option>
+                              <option value="MN">MN</option>
+                              <option value="MS">MS</option>
+                              <option value="MO">MO</option>
+                              <option value="MT">MT</option>
+                              <option value="NE">NE</option>
+                              <option value="NV">NV</option>
+                              <option value="NH">NH</option>
+                              <option value="NJ">NJ</option>
+                              <option value="NM">NM</option>
+                              <option value="NY">NY</option>
+                              <option value="NC">NC</option>
+                              <option value="ND">ND</option>
+                              <option value="OH">OH</option>
+                              <option value="OK">OK</option>
+                              <option value="OR">OR</option>
+                              <option value="PA">PA</option>
+                              <option value="RI">RI</option>
+                              <option value="SC">SC</option>
+                              <option value="SD">SD</option>
+                              <option value="TN">TN</option>
+                              <option value="TX">TX</option>
+                              <option value="UT">UT</option>
+                              <option value="VT">VT</option>
+                              <option value="VA">VA</option>
+                              <option value="WA">WA</option>
+                              <option value="WV">WV</option>
+                              <option value="WI">WI</option>
+                              <option value="WY">WY</option>
+                          </select>
+                        </div>
+                        <div class="input-field col s12 m3">
+                          <input id="boxDeliveryAddressZip" type="text" class="validate">
+                          <label for="boxDeliveryAddressZip">Zipcode</label>
+                        </div>
+                      </div>
+                        <div class="row">
+                          <a class="waves-effect waves-light btn-large col s4 offset-s4 disabled" id="submitBoxDeliveryForm" style="background-color: #ff8b38">
+                            Submit
+                          </a>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Box Request Confirmed -->
+          <div id="boxDeliveryRequestConfirmed" class="row" style="display: none;">
+            <div class="col m10 offset-m1">
+              <div class="card horizontal">
+                <div class="card-stacked">
+                  <div class="card-content">
+                    <div class="col s12 center">
+                      <div class="col s10 offset-s1 m6 offset-m3">
+                        <i class="large material-icons green accent-3" style="font-size: 150px;color: #00e676">done</i>
+                        <h3 style="margin-top: 0px;">Thanks, your box delivery request has been completed! We'll see you on the day / time you selected!.</h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- End Box Request Confirmed -->
+          </div>
         </div>
+        
       <div id="boxShipRequest" style="display: none;">
         <div id="boxRequestForm" class="row center">
             <div class="col m10 offset-m1">
@@ -4946,6 +5156,7 @@ a {
               </div>
             </div>
           </div>
+        </div>
             <!-- Box Request Confirmed -->
           <div id="boxRequestConfirmed" class="row" style="display: none;">
             <div class="col m10 offset-m1">
@@ -4968,13 +5179,16 @@ a {
       </div>
       </div>
 
+  
+
+
 
       <!-- End Box Drop Off Request -->
 
       <!-- View Items -->
       <button id="viewItemsButton" onclick="myFunction('viewItems')" class="w3-button w3-block w3-left-align collapsibleHeader"><i class="material-icons icons">view_quilt</i>View Your Items</button>
-      <div id="viewItems" class="w3-hide w3-container collapsibleBody w3-animate-opacity">
-        <p>You have no items. Schedule a pickup first!</p>
+        <div id="viewItems" class="w3-hide w3-container collapsibleBody w3-animate-opacity">
+        </div>
       </div>
       <!-- End View Items -->
 
@@ -5126,6 +5340,15 @@ a {
           type: null
         },
         dorms: null,
+        images: {
+          one: "https://static1.squarespace.com/static/54f739b1e4b016a7c95a390f/t/5925bff49de4bbde0f4dddce/1495646209895/IMG_0587.png",
+          two: 'https://static1.squarespace.com/static/54f739b1e4b016a7c95a390f/t/5925da96ebbd1a9fc74c91e2/1495653027204/IMG_0586.png',
+          three: 'https://static1.squarespace.com/static/54f739b1e4b016a7c95a390f/t/5925da96ebbd1a9fc74c91e2/1495653027204/IMG_0586.png',
+          four: 'https://static1.squarespace.com/static/54f739b1e4b016a7c95a390f/t/5925da96ebbd1a9fc74c91e2/1495653027204/IMG_0586.png',
+          five: 'https://static1.squarespace.com/static/54f739b1e4b016a7c95a390f/t/5925da96ebbd1a9fc74c91e2/1495653027204/IMG_0586.png',
+          six: 'https://static1.squarespace.com/static/54f739b1e4b016a7c95a390f/t/5925da96ebbd1a9fc74c91e2/1495653027204/IMG_0586.png',
+          seven: 'https://static1.squarespace.com/static/54f739b1e4b016a7c95a390f/t/5925da96ebbd1a9fc74c91e2/1495653027204/IMG_0586.png'
+        },
         date: null,
         uid: null
       }
@@ -6137,6 +6360,45 @@ a {
 
       // End Account Information Logic
 
+      // View Items Logic
+
+      function displayImages() {
+
+        // create the row div 
+          var div = document.createElement('div');
+          div.setAttribute('class', 'row'); 
+
+        for (var key in model.images) {
+          var filePath = model.images[key]
+
+          // create the sub div
+          var subDiv = document.createElement('div');
+          div.appendChild(subDiv);
+
+          subDiv.setAttribute('class', 'col l3 s6')
+
+          // create the image file
+          var img = document.createElement("img");
+
+          img.setAttribute('class', 'materialboxed');
+          img.setAttribute('width', '200');
+          img.setAttribute('style', 'margin-bottom: 10px; margin-top: 10px')
+          img.setAttribute('src', filePath);
+
+          subDiv.appendChild(img);
+
+          // append the div to the View Items section
+          document.getElementById('viewItems').appendChild(div);
+
+          // reinitialize the lightbox 
+          $('.materialboxed').materialbox();
+          };
+      };
+
+      // End View Items Logic
+
+      // Javascript for opening each tab on the profile page
+
       function myFunction(id) {
 
         var ids = ['notifications', 'schedule', 'viewItems', 'acctInfo', 'boxRequest', 'creditCard'];
@@ -6333,6 +6595,8 @@ a {
     $(document).ready(function(){
     // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     $('.modal').modal();
+    $('.materialboxed').materialbox();
+    displayImages();
   });
     </script>
 
