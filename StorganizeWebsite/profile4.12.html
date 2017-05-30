@@ -5342,7 +5342,10 @@ a {
         dorms: null,
         images: null,
         date: null,
-        uid: null
+        uid: null,
+        appState: {
+          imagesLoaded: false
+        }
       }
 
       // Notifications event listeners
@@ -5432,11 +5435,21 @@ a {
                     seedToDoListPayment();
                     seedToDoListBoxes();
 
-                    firebase.database().ref('/images/' + user.uid).once('value').then(function(snapshot) {
-                      model.images = (snapshot.val());
-                      console.log(model.images)
-                      displayImages();
-                    });  
+                    if (!model.appState.imagesLoaded) {
+
+                      firebase.database().ref('/images/' + user.uid).once('value').then(function(snapshot) {
+                        model.images = (snapshot.val());
+                        displayImages();
+
+                        // get the dowload URL of the file in firebase storage
+                        var storageRef = firebase.storage().ref().child("/0h415KSOcVRX1vc30sTNZYbVxlc2//New Doc 2017-05-10_1.jpg").getDownloadURL().then(function(url) {
+                          console.log(url)
+                        })
+
+
+                      });  
+                        console.log('images loaded are' + '' + model.appState.imagesLoaded)
+                    } else {console.log('images loaded are' + '' + model.appState.imagesLoaded)}
                   });
 
                 });
@@ -6360,7 +6373,6 @@ a {
           var img = document.createElement("img");
 
           img.setAttribute('class', 'materialboxed');
-          img.setAttribute('width', '200');
           img.setAttribute('style', 'margin-bottom: 10px; margin-top: 10px')
           img.setAttribute('src', filePath);
 
@@ -6372,6 +6384,7 @@ a {
           // reinitialize the lightbox 
           $('.materialboxed').materialbox();
           };
+        model.appState.imagesLoaded === true;
       };
 
       // End View Items Logic
